@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/auth/create-staff", "destination": "/api/auth-heavy" },
+    { "source": "/api/auth/(.*)", "destination": "/api/auth-simple" },
+    { "source": "/api/user/(.*)", "destination": "/api/auth-simple" },
+    { "source": "/api/inventory", "destination": "/api/lab-router" },
+    { "source": "/api/inventory/(.*)", "destination": "/api/lab-router" },
+    { "source": "/api/slots", "destination": "/api/lab-router" },
+    { "source": "/api/slots/(.*)", "destination": "/api/lab-router" },
+    { "source": "/api/indents", "destination": "/api/lab-router" },
+    { "source": "/api/indents/(.*)", "destination": "/api/lab-router" },
+    { "source": "/api/notifications", "destination": "/api/lab-router" },
+    { "source": "/api/stats/(.*)", "destination": "/api/lab-router" },
+    { "source": "/api/gallery", "destination": "/api/projects-router" },
+    { "source": "/api/gallery/(.*)", "destination": "/api/projects-router" },
+    { "source": "/api/projects", "destination": "/api/projects-router" },
+    { "source": "/api/projects/(.*)", "destination": "/api/projects-router" },
+    { "source": "/api/events", "destination": "/api/projects-router" },
+    { "source": "/api/events/(.*)", "destination": "/api/projects-router" },
+    { "source": "/api/cms-pages", "destination": "/api/projects-router" },
+    { "source": "/api/cms-pages/(.*)", "destination": "/api/projects-router" },
+    { "source": "/api/pdf-reviews", "destination": "/api/projects-router" },
+    { "source": "/api/pdf-reviews/(.*)", "destination": "/api/projects-router" },
+    { "source": "/api/stl/(.*)", "destination": "/api/projects-router" },
+    { "source": "/api/pcb/(.*)", "destination": "/api/projects-router" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
+  ]
+}

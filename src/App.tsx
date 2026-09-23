@@ -1,0 +1,317 @@
+// src/App.tsx
+
+import React, { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
+
+import Navbar from "./components/Navbar";
+import DashboardNavbar from "./components/DashboardNavbar";
+import Footer from "./components/Footer";
+import FloatingLoginBtn from "./components/FloatingLoginBtn";
+import OnboardingPage from "./pages/OnboardingPage";
+import ProgressBar from "./components/ProgressBar";
+
+import Home from "./pages/Home";
+import Events from "./pages/Events";
+import EventDetails from "./pages/EventDetails";
+import Gallery from "./pages/Gallery";
+import Components from "./pages/Components";
+import Print3D from "./pages/Print3D";
+import PcbOrderPage from "./pages/PcbOrder";
+import { UserDashboard } from "./pages/UserDashboard";
+import Login from "./pages/Login";
+import StaffLogin from "./pages/StaffLogin";
+import StaffDashboard from "./pages/StaffDashboard";
+import About from "./pages/About";
+import Projects from "./pages/Projects";
+import ProjectDetails from "./pages/ProjectDetails";
+import Resources from "./pages/Resources";
+import Testimonials from "./pages/Testimonials";
+import Infrastructure from "./pages/Infrastructure";
+import SlotBooking from "./pages/SlotBooking";
+
+import { User, StaffUser } from "../types";
+import { authService } from "./services/api";
+import { supabase } from "./services/supabase";
+import { auth, db } from "./services/firebase";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { Loader2 } from "lucide-react";
+import { Analytics } from "@vercel/analytics/react";
+
+/* -------------------- Scroll Control -------------------- */
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
+/* -------------------- Guards -------------------- */
+const UserRoute = ({
+  user,
+  children,
+}: {
+  user: User | null;
+  children: React.ReactNode;
+}) => (user ? <>{children}</> : <Navigate to="/login" replace />);
+
+const StaffRoute = ({
+  staff,
+  children,
+}: {
+  staff: StaffUser | null;
+  children: React.ReactNode;
+}) => (staff ? <>{children}</> : <Navigate to="/staff-login" replace />);
+
+/* ============================================================ */
+const App: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [staffUser, setStaffUser] = useState<StaffUser | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  /* ---------------- Restore session once ---------------- */
+  useEffect(() => {
+    let mounted = true;
+
+    const syncToFirebase = async (userData: any) => {
+      if (!userData) return;
+      try {
+        await setDoc(doc(db, "users", userData.uid), {
+          ...userData,
+          lastLogin: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+      } catch (err) {
+        console.error("Firebase sync failed:", err);
+      }
+    };
+
+    (async () => {
+      try {
+        const session = await authService.getCurrentSession(supabase);
+        if (!mounted) return;
+        setUser(session.user);
+        setStaffUser(session.staff);
+        if (session.user) await syncToFirebase(session.user);
+      } finally {
+        if (mounted) setAuthReady(true);
+      }
+    })();
+
+    // Listen for auth changes (Supabase)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        const currentUser = await authService.getCurrentSession(supabase);
+        setUser(currentUser.user);
+        setStaffUser(currentUser.staff);
+        if (currentUser.user) await syncToFirebase(currentUser.user);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setStaffUser(null);
+      }
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  /* ---------------- Logout ---------------- */
+  const handleLogout = () => {
+    supabase.auth.signOut();
+    authService.logout();
+    setUser(null);
+    setStaffUser(null);
+  };
+
+  /* ---------------- Profile updates ---------------- */
+  const handleProfileComplete = (updated: User) => {
+    // Always mark complete locally first — don't block on API response
+    setUser({ ...updated, isProfileComplete: true });
+    authService.updateProfile({ ...updated, isProfileComplete: true }).then(saved => {
+      setUser({ ...saved, isProfileComplete: true });
+    }).catch(() => {/* non-fatal */});
+  };
+
+  const handleUserUpdate = async (data: { name: string; avatar: string }) => {
+    if (staffUser) {
+      const updated = { ...staffUser, ...data };
+      await authService.updateStaffProfile(updated);
+      setStaffUser(updated);
+    } else if (user) {
+      const updated = { ...user, ...data };
+      await authService.updateProfile(updated);
+      setUser(updated);
+    }
+  };
+
+/* -------------------- Navbar Wrapper -------------------- */
+const NavbarWrapper = ({ user, staffUser, onLogout, onUpdateUser }: any) => {
+  const location = useLocation();
+  const isDashboard = ["/dashboard", "/staff-dashboard", "/login", "/staff-login"].includes(location.pathname);
+
+  if (isDashboard) {
+    return (
+      <DashboardNavbar
+        user={user}
+        staffUser={staffUser}
+        onLogout={onLogout}
+        onUpdateUser={onUpdateUser}
+      />
+    );
+  }
+
+  return (
+    <Navbar
+      user={user}
+      staffUser={staffUser}
+      onLogout={onLogout}
+      onUpdateUser={onUpdateUser}
+    />
+  );
+};
+
+  /* ---------------- Block UI until auth resolved ---------------- */
+  if (!authReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="w-10 h-10 animate-spin text-brand-600" />
+      </div>
+    );
+  }
+
+  return (
+    <Router>
+      <ScrollToTop />
+      <ProgressBar />
+
+      <div className="flex flex-col min-h-screen">
+        <NavbarWrapper
+          user={user}
+          staffUser={staffUser}
+          onLogout={handleLogout}
+          onUpdateUser={handleUserUpdate}
+        />
+
+
+
+        <main className="flex-grow">
+          <Routes>
+            {/* Public */}
+            <Route path="/" element={<Home />} />
+            <Route path="/events" element={<Events user={user || undefined} />} />
+            <Route path="/events/:id" element={<EventDetails />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/team" element={<Navigate to="/about" replace />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:id" element={<ProjectDetails />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/testimonials" element={<Testimonials />} />
+            <Route path="/infrastructure" element={<Infrastructure />} />
+
+            {/* Auth */}
+            <Route
+              path="/login"
+              element={
+                user
+                  ? <Navigate to="/dashboard" replace />
+                  : <Login onLogin={setUser} />
+              }
+            />
+
+            {/* Onboarding */}
+            <Route
+              path="/onboarding"
+              element={
+                user
+                  ? <Navigate to="/dashboard" replace />
+                  : <Navigate to="/login" replace />
+              }
+            />
+
+            <Route
+              path="/staff-login"
+              element={
+                staffUser ? (
+                  <Navigate to="/staff-dashboard" replace />
+                ) : (
+                  <StaffLogin onLogin={setStaffUser} />
+                )
+              }
+            />
+
+            {/* User */}
+            <Route
+              path="/dashboard"
+              element={
+                <UserRoute user={user}>
+                  <UserDashboard user={user || undefined} />
+                </UserRoute>
+              }
+            />
+
+            <Route
+              path="/components"
+              element={
+                <UserRoute user={user}>
+                  <Components user={user || undefined} />
+                </UserRoute>
+              }
+            />
+
+            <Route
+              path="/3d-print"
+              element={
+                <UserRoute user={user}>
+                  <Print3D user={user || undefined} />
+                </UserRoute>
+              }
+            />
+
+            <Route
+              path="/pcb-order"
+              element={
+                <UserRoute user={user}>
+                  <PcbOrderPage user={user || undefined} />
+                </UserRoute>
+              }
+            />
+
+            <Route
+              path="/slot-booking"
+              element={
+                <UserRoute user={user}>
+                  <SlotBooking user={user || undefined} />
+                </UserRoute>
+              }
+            />
+
+            {/* Staff */}
+            <Route
+              path="/staff-dashboard"
+              element={
+                <StaffRoute staff={staffUser}>
+                  <StaffDashboard staff={staffUser} />
+                </StaffRoute>
+              }
+            />
+          </Routes>
+        </main>
+
+        <Footer />
+        <Analytics />
+        {!user && !staffUser && <FloatingLoginBtn />}
+      </div>
+    </Router>
+  );
+};
+
+export default App;

@@ -1,0 +1,1 @@
+export default (req, res) => res.status(200).send("ROOT_TEST_V99");
