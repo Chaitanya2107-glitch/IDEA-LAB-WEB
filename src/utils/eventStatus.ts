@@ -38,7 +38,7 @@ export function getComputedEventStatus(event: any): EventStatus {
 }
 
 export const STATUS_STYLES: Record<EventStatus, { label: string; cls: string }> = {
-  upcoming:  { label: 'Upcoming',  cls: 'bg-blue-50 text-blue-700 border-blue-200' },
-  ongoing:   { label: 'Ongoing',   cls: 'bg-green-50 text-green-700 border-green-200' },
-  completed: { label: 'Completed', cls: 'bg-slate-100 text-slate-500 border-slate-200' },
+  upcoming:  { label: 'Upcoming',  cls: 'bg-blue-50 text-blue-700 ring-blue-600/20' },
+  ongoing:   { label: 'Ongoing',   cls: 'bg-brand-50 text-brand-700 ring-brand-600/20' },
+  completed: { label: 'Completed', cls: 'bg-green-50 text-green-700 ring-green-600/20' },
 };

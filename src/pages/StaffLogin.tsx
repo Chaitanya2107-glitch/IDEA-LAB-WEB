@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  Shield,
-  Mail,
   Lock,
   AlertCircle,
   Loader2,
@@ -76,105 +74,97 @@ const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
-      {/* --- Right Column: Image --- */}
-      <div className="hidden lg:block flex-1 bg-slate-950 relative overflow-hidden order-last">
-        <motion.img 
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          src="img/comp/DSC09551.JPG"
-          className="absolute inset-0 w-full h-full object-cover"
-          alt="Makerspace Management"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/40" />
-      </div>
+    <div className="min-h-screen bg-slate-50 pt-16">
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12 sm:px-6">
+        <div className="w-full max-w-md">
+        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
 
-      <div className="flex-1 flex flex-col justify-center px-8 lg:px-12">
-        <div className="max-w-[440px] w-full mx-auto">
-
-          <div className="mb-10">
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-3">
+          <div className="mb-8">
+            <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
               Staff Access Only
             </h1>
-            <p className="text-slate-400 font-bold">
+            <p className="mt-2 text-sm text-slate-600">
               Sign in with your staff credentials to access the laboratory control center.
             </p>
           </div>
 
           <AnimatePresence mode="wait">
             {error && (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className={`border p-4 rounded-2xl mb-8 flex items-center gap-3 font-bold text-sm ${
-                  error.includes("approval") || error.includes("verified") 
-                  ? "bg-amber-50 border-amber-100 text-amber-600" 
-                  : "bg-red-50 border-red-100 text-red-600"
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                role="alert"
+                className={`mb-6 flex items-start gap-2 rounded-lg border px-4 py-3 text-sm ${
+                  error.includes("approval") || error.includes("verified")
+                  ? "border-amber-200 bg-amber-50 text-amber-800"
+                  : "border-red-200 bg-red-50 text-red-800"
                 }`}
               >
-                <AlertCircle className="w-5 h-5 shrink-0" />
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
                 {error}
               </motion.div>
             )}
           </AnimatePresence>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Staff Email</label>
+              <label htmlFor="staff-email" className="mb-1.5 block text-sm font-medium text-slate-700">Staff Email</label>
               <input
+                id="staff-email"
                 type="email"
                 required
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:border-slate-900 focus:ring-4 focus:ring-slate-900/5 outline-none transition-all font-bold placeholder:text-slate-300"
+                className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                 placeholder="staff@reva.edu.in"
               />
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Security Key</label>
-              </div>
+              <label htmlFor="staff-password" className="mb-1.5 block text-sm font-medium text-slate-700">Security Key</label>
               <div className="relative">
                 <input
+                  id="staff-password"
                   type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:border-slate-900 focus:ring-4 focus:ring-slate-900/5 outline-none transition-all font-bold placeholder:text-slate-300 pr-12"
+                  className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 pr-11 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                   placeholder="••••••••"
                 />
-                <button 
+                <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute inset-y-0 right-0 inline-flex w-10 items-center justify-center rounded-r-lg text-slate-400 transition-colors hover:text-slate-700"
                 >
-                  {showPassword ? <Eye className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
+                  {showPassword ? <Eye className="h-4 w-4" aria-hidden="true" /> : <Lock className="h-4 w-4" aria-hidden="true" />}
                 </button>
               </div>
             </div>
 
-            <motion.button
-              whileTap={{ scale: 0.98 }}
+            <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-[13px] hover:bg-black transition shadow-xl shadow-slate-900/20 flex items-center justify-center gap-3"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Authorize Access"}
-            </motion.button>
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Authorize Access"}
+            </button>
 
             <div className="relative py-2">
-              <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100"></div></div>
-              <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest text-slate-300 bg-white px-4">OR</div>
+              <div className="absolute inset-0 flex items-center" aria-hidden="true"><div className="w-full border-t border-slate-200"></div></div>
+              <div className="relative flex justify-center">
+                <span className="bg-white px-3 text-xs text-slate-500">OR</span>
+              </div>
             </div>
 
             <button
               onClick={startMicrosoftLogin}
               type="button"
-              className="w-full py-4 border border-slate-200 rounded-2xl font-black uppercase tracking-widest text-[13px] text-slate-700 hover:bg-slate-50 transition flex items-center justify-center gap-3"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <svg className="w-5 h-5" viewBox="0 0 23 23">
+              <svg className="h-4 w-4" viewBox="0 0 23 23" aria-hidden="true">
                 <rect x="1" y="1" width="10" height="10" fill="#f25022"/>
                 <rect x="12" y="1" width="10" height="10" fill="#7fbb00"/>
                 <rect x="1" y="12" width="10" height="10" fill="#00a1f1"/>
@@ -183,8 +173,9 @@ const StaffLogin: React.FC<StaffLoginProps> = ({ onLogin }) => {
               Login with Outlook
             </button>
           </form>
+        </div>
 
-          <p className="mt-12 text-center text-[10px] font-black uppercase tracking-widest text-slate-300">
+          <p className="mt-6 text-center text-xs text-slate-500">
             AICTE IDEA Lab &copy; {new Date().getFullYear()}
           </p>
         </div>

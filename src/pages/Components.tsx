@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Search, Package, ShoppingCart, Trash2, X, Plus, CheckCircle, Filter, FileText, AlertTriangle, Building2, UserCircle, Minus, Loader2, ArrowLeft } from 'lucide-react';
+import { Search, Package, ShoppingCart, X, Plus, CheckCircle, Filter, FileText, UserCircle, Minus, Loader2, ArrowLeft } from 'lucide-react';
 import { User, InventoryItem, IndentItem, Indent } from '../../types';
 import { authService } from '../services/api';
 import { Link, useNavigate } from 'react-router-dom';
@@ -135,96 +135,81 @@ const Components: React.FC<ComponentsProps> = ({ user }) => {
 
   if (loading || isGuest) {
       return (
-          <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-              <Loader2 className="w-10 h-10 text-brand-500 animate-spin" />
+          <div className="flex min-h-screen items-center justify-center bg-slate-50 pt-16" role="status">
+              <Loader2 className="h-8 w-8 animate-spin text-brand-600" aria-hidden="true" />
+              <span className="sr-only">Loading</span>
           </div>
       );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 relative overflow-hidden">
-      
-      {/* Interactive Framework Overlay */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-5" style={{
-         backgroundImage: 'linear-gradient(rgba(15, 23, 42, 0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, 0.4) 1px, transparent 1px)',
-         backgroundSize: '40px 40px',
-         maskImage: 'linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)'
-      }}></div>
+    <div className="min-h-screen bg-slate-50 pt-16">
 
-      {/* Modern Dark Header with Slow Gradient and Neon Glow */}
-      <div className="relative pt-32 pb-24 px-4 overflow-hidden bg-slate-950">
-        {/* Animated Dark Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-black to-slate-900 bg-[length:400%_400%] animate-gradient-flow z-0"></div>
-        
-        {/* Noise Overlay */}
-        <div className="absolute inset-0 bg-noise opacity-20 z-0 mix-blend-overlay"></div>
-        
-        {/* Neon Glow Peeking */}
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-600/30 rounded-full blur-[128px] opacity-50 animate-pulse"></div>
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-brand-500/20 rounded-full blur-[120px] pointer-events-none"></div>
-
-        <div className="relative z-10 max-w-7xl mx-auto text-center md:text-left">
+      {/* Page Header */}
+      <section className="bg-slate-50 py-8 md:py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
            {/* Back to Dashboard */}
            <div className="mb-6">
-                <Link to="/dashboard" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-bold">
-                    <ArrowLeft className="w-4 h-4" /> Back to Dashboard
+                <Link to="/dashboard" className="inline-flex items-center gap-1 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700 hover:underline underline-offset-4">
+                    <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back to Dashboard
                 </Link>
            </div>
 
-           {/* Badge */}
-            <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 bg-slate-900/50 backdrop-blur-md rounded-full border border-white/10 shadow-lg shadow-brand-900/10 hover:border-brand-500/50 transition-colors cursor-default group">
-                <Package className="w-4 h-4 text-brand-400 group-hover:text-brand-300 transition-colors" />
-                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider group-hover:text-white transition-colors">Component Catalog</span>
-            </div>
-            
-            <h1 className="text-5xl md:text-7xl font-display font-black text-white mb-6 tracking-tight drop-shadow-2xl">
-                Hardware <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-vivid-pink">Library</span>
+           {/* Eyebrow */}
+            <p className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-wider text-brand-600">
+                <Package className="h-4 w-4 text-brand-500" aria-hidden="true" />
+                Component Catalog
+            </p>
+
+            <h1 className="mt-2 font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+                Hardware <span className="text-brand-600">Library</span>
             </h1>
-            
-            <p className="text-xl text-slate-400 font-light max-w-2xl leading-relaxed">
+
+            <p className="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600">
                 Access our state-of-the-art component library. From microcontrollers to sensors, everything you need to build the future is right here.
             </p>
         </div>
-        
-        {/* Decorative Grid Lines */}
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent opacity-50"></div>
-      </div>
+      </section>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-10 pb-32">
-        
+      <div className="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
+
         {/* Search Bar & Filter */}
         <div className="mb-8 flex flex-col gap-4">
-            <div className="flex gap-4">
+            <div className="flex gap-3">
                 <div className="relative flex-grow">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input 
-                        type="text" 
-                        placeholder="Search components (e.g., 'Arduino', 'Sensor')..." 
+                    <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+                    <input
+                        type="text"
+                        placeholder="Search components (e.g., 'Arduino', 'Sensor')..."
+                        aria-label="Search components"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-12 pr-4 py-4 rounded-2xl border-none shadow-lg shadow-brand-900/10 focus:ring-2 focus:ring-brand-500 text-lg"
+                        className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 pl-10 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                     />
                 </div>
-                <button 
+                <button
                     onClick={() => setShowFilter(!showFilter)}
-                    className={`p-4 rounded-2xl shadow-lg transition-colors flex items-center gap-2 font-bold ${showFilter ? 'bg-slate-900 text-white shadow-slate-900/20' : 'bg-white text-slate-500 hover:text-slate-900 shadow-brand-900/10'}`}
+                    aria-expanded={showFilter}
+                    aria-label="Filter"
+                    className={`inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-semibold shadow-sm transition-colors ${showFilter ? 'border-brand-600 bg-brand-50 text-brand-700' : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900'}`}
                 >
-                    <Filter className="w-6 h-6" />
+                    <Filter className="h-4 w-4" aria-hidden="true" />
                     <span className="hidden sm:inline">Filter</span>
                 </button>
             </div>
 
             {/* Filter Dropdown */}
             {showFilter && (
-                <div className="bg-white p-4 rounded-2xl shadow-lg border border-gray-100 animate-slide-up">
-                    <p className="text-xs font-bold text-slate-500 uppercase mb-3">Categories</p>
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm animate-slide-up">
+                    <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Categories</p>
                     <div className="flex flex-wrap gap-2">
                         {categories.map(cat => (
                             <button
                                 key={cat}
                                 onClick={() => setSelectedCategory(cat)}
-                                className={`px-4 py-2 rounded-lg text-sm font-bold border transition-all ${selectedCategory === cat ? 'bg-brand-600 text-white border-brand-600' : 'bg-white text-slate-600 border-gray-200 hover:border-brand-400'}`}
+                                aria-pressed={selectedCategory === cat}
+                                className={`rounded-full border px-3 py-1 text-sm font-medium transition-colors ${selectedCategory === cat ? 'border-brand-600 bg-brand-50 text-brand-700' : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300'}`}
                             >
                                 {cat}
                             </button>
@@ -235,149 +220,153 @@ const Components: React.FC<ComponentsProps> = ({ user }) => {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredCatalog.map((item) => {
                 const cartItem = cart.find(c => c.id === item.id);
                 const quantityInCart = cartItem ? cartItem.quantity : 0;
                 const isDisabled = item.availableQuantity === 0;
-                
+
                 // Placeholder images for demo
                 const imageUrl = `https://picsum.photos/seed/${item.name.replace(/\s/g,'')}/400/300`;
 
                 return (
-                <div key={item.id} className="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1 group relative z-10">
-                    <div className="relative h-48 rounded-2xl overflow-hidden mb-4">
-                    <img src={imageUrl} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                    <div className="absolute top-2 right-2 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-slate-800 shadow-sm">
+                <div key={item.id} className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md hover:border-slate-300">
+                    <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
+                    <img src={imageUrl} alt={item.name} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
+                    <div className="absolute top-3 left-3 rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-slate-700 shadow-sm">
                         {item.category}
                     </div>
                     </div>
-                    <div className="px-2">
-                    <h3 className="text-xl font-bold text-slate-900 mb-1">{item.name}</h3>
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="p-5">
+                    <h3 className="font-display text-lg font-semibold text-slate-900">{item.name}</h3>
+                    <div className="mb-4 mt-2 flex items-center justify-between gap-3">
                          <div className="min-w-0"> {/* Added min-w-0 to prevent overflow */}
-                            <span className={`text-sm font-medium ${item.availableQuantity > 0 ? 'text-green-600' : 'text-red-500'}`}>
+                            <span className={`text-sm font-medium ${item.availableQuantity > 0 ? 'text-green-700' : 'text-red-600'}`}>
                             {item.availableQuantity} in Stock
                             </span>
-                            <div className="text-xs text-slate-400 font-medium capitalize">{item.type}</div>
+                            <div className="text-xs text-slate-500 capitalize">{item.type}</div>
                          </div>
-                         {item.costPerUnit > 0 && <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-bold">₹{item.costPerUnit}</span>}
+                         {item.costPerUnit > 0 && <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700 ring-1 ring-inset ring-brand-600/20 tabular-nums">₹{item.costPerUnit}</span>}
                     </div>
 
                     {!isDisabled ? (
                         <div className="flex items-center gap-3">
                             {quantityInCart > 0 ? (
                                 <>
-                                <button 
+                                <button
                                     onClick={() => removeFromCart(item.id)}
-                                    className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors"
+                                    aria-label={`Remove one ${item.name}`}
+                                    className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900"
                                 >
-                                    <Minus className="w-4 h-4 text-slate-700" />
+                                    <Minus className="h-4 w-4" aria-hidden="true" />
                                 </button>
-                                <span className="font-bold text-lg w-8 text-center">{quantityInCart}</span>
-                                <button 
+                                <span className="w-8 text-center text-base font-semibold tabular-nums text-slate-900">{quantityInCart}</span>
+                                <button
                                     onClick={() => {
                                         const catalogItem = catalog.find(c => c.id === item.id);
                                         if (catalogItem && quantityInCart < catalogItem.availableQuantity) {
                                             addToCart(catalogItem);
                                         }
-                                    }} 
-                                    className="w-10 h-10 rounded-xl bg-slate-900 hover:bg-brand-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white flex items-center justify-center transition-colors"
+                                    }}
+                                    aria-label={`Add one ${item.name}`}
+                                    className="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-brand-600 text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                                 >
-                                    <Plus className="w-4 h-4" />
+                                    <Plus className="h-4 w-4" aria-hidden="true" />
                                 </button>
                                 </>
                             ) : (
-                                <button 
+                                <button
                                     onClick={() => addToCart(item)}
-                                    className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-brand-600 transition-colors shadow-lg flex items-center justify-center gap-2"
+                                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                                 >
-                                    <Plus className="w-4 h-4" /> Add to Cart
+                                    <Plus className="h-4 w-4" aria-hidden="true" /> Add to Cart
                                 </button>
                             )}
                         </div>
                     ) : (
-                        <button disabled className="w-full py-3 bg-gray-100 text-gray-400 rounded-xl font-bold cursor-not-allowed">
+                        <button disabled className="inline-flex w-full cursor-not-allowed items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm font-semibold text-slate-500">
                              Out of Stock
                         </button>
                     )}
-                    
+
                     </div>
                 </div>
                 );
             })}
         </div>
       </div>
-      
+
       {/* ... Rest of Cart Modal Logic remains the same ... */}
        {/* FLOATING CART BUTTON */}
       {cart.length > 0 && (
-        <button 
+        <button
           onClick={() => setShowCart(true)}
-          className="fixed bottom-8 right-8 z-30 bg-slate-900 text-white p-4 rounded-full shadow-2xl hover:bg-slate-800 transition-all hover:scale-105 active:scale-95 flex items-center gap-3 animate-slide-up"
+          className="fixed bottom-8 right-8 z-30 inline-flex items-center gap-3 rounded-lg bg-brand-600 px-5 py-3 text-base font-semibold text-white shadow-lg transition-colors hover:bg-brand-700 animate-slide-up"
         >
           <div className="relative">
-             <ShoppingCart className="w-6 h-6" />
-             <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 rounded-full text-xs flex items-center justify-center font-bold border-2 border-slate-900">
+             <ShoppingCart className="h-5 w-5" aria-hidden="true" />
+             <span className="absolute -top-2.5 -right-2.5 flex h-5 w-5 items-center justify-center rounded-full bg-white text-xs font-semibold text-brand-700 ring-2 ring-brand-600">
                {cart.reduce((acc, item) => acc + item.quantity, 0)}
              </span>
           </div>
-          <span className="font-bold pr-2">View Cart</span>
+          <span>View Cart</span>
         </button>
       )}
 
       {/* CART MODAL */}
       {showCart && (
-        <div className="fixed inset-0 z-40 flex justify-end">
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setShowCart(false)}></div>
-          <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col animate-fade-in">
-             <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-               <h2 className="text-xl font-display font-bold flex items-center gap-2">
-                 <ShoppingCart className="w-5 h-5" /> Your Cart
+        <div className="fixed inset-0 z-50 flex justify-end">
+          <div className="absolute inset-0 bg-slate-900/50" onClick={() => setShowCart(false)}></div>
+          <div role="dialog" aria-modal="true" aria-labelledby="cart-drawer-title" className="relative flex h-full w-full max-w-md flex-col border-l border-slate-200 bg-white shadow-xl animate-fade-in">
+             <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+               <h2 id="cart-drawer-title" className="flex items-center gap-2 font-display text-xl font-semibold text-slate-900">
+                 <ShoppingCart className="h-5 w-5 text-slate-400" aria-hidden="true" /> Your Cart
                </h2>
-               <button onClick={() => setShowCart(false)} className="p-2 hover:bg-gray-200 rounded-full">
-                 <X className="w-5 h-5" />
+               <button onClick={() => setShowCart(false)} aria-label="Close cart" className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900">
+                 <X className="h-5 w-5" aria-hidden="true" />
                </button>
              </div>
-             
+
              {checkoutSuccess ? (
-                <div className="flex-grow flex flex-col items-center justify-center text-center p-8">
-                     <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                         <CheckCircle className="w-10 h-10 text-green-600" />
+                <div className="flex flex-grow flex-col items-center justify-center p-8 text-center" role="status">
+                     <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-50 text-green-600">
+                         <CheckCircle className="h-6 w-6" aria-hidden="true" />
                      </div>
-                     <h3 className="text-2xl font-bold text-slate-900">Indent Submitted!</h3>
-                     <p className="text-slate-500 mt-2">Waiting for staff approval. Check dashboard.</p>
+                     <h3 className="font-display text-xl font-semibold text-slate-900">Indent Submitted!</h3>
+                     <p className="mt-1 text-sm text-slate-500">Waiting for staff approval. Check dashboard.</p>
                 </div>
              ) : showIndentForm ? (
-                <div className="flex-grow flex flex-col p-6 overflow-y-auto">
-                    <div className="mb-6 flex items-center gap-3 bg-blue-50 p-4 rounded-xl border border-blue-100">
-                       <FileText className="w-8 h-8 text-blue-600" />
+                <div className="flex flex-grow flex-col overflow-y-auto p-6">
+                    <div className="mb-6 flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+                       <FileText className="h-5 w-5 shrink-0" aria-hidden="true" />
                        <div>
-                          <h3 className="font-bold text-blue-900">Digital Indent</h3>
-                          <p className="text-xs text-blue-600">Required for University records.</p>
+                          <h3 className="font-semibold">Digital Indent</h3>
+                          <p className="text-xs">Required for University records.</p>
                        </div>
                     </div>
-                    
+
                     <form onSubmit={submitIndent} className="space-y-4">
                        <div>
-                          <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Project Title</label>
-                          <input 
+                          <label htmlFor="indent-project-title" className="mb-1.5 block text-sm font-medium text-slate-700">Project Title</label>
+                          <input
+                            id="indent-project-title"
                             required
-                            type="text" 
-                            className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500"
+                            type="text"
+                            className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                             placeholder="e.g. IoT Weather Station"
                             value={indentData.projectTitle}
                             onChange={(e) => setIndentData({...indentData, projectTitle: e.target.value})}
                           />
                        </div>
                        <div>
-                          <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Supervisor / Faculty</label>
+                          <label htmlFor="indent-supervisor" className="mb-1.5 block text-sm font-medium text-slate-700">Supervisor / Faculty</label>
                           <div className="relative">
-                             <UserCircle className="absolute left-3 top-3.5 w-5 h-5 text-gray-400" />
-                             <input 
+                             <UserCircle className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+                             <input
+                                id="indent-supervisor"
                                 required
-                                type="text" 
-                                className="w-full pl-10 p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500"
+                                type="text"
+                                className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 pl-10 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                                 placeholder="Faculty Name"
                                 value={indentData.supervisor}
                                 onChange={(e) => setIndentData({...indentData, supervisor: e.target.value})}
@@ -385,9 +374,10 @@ const Components: React.FC<ComponentsProps> = ({ user }) => {
                           </div>
                        </div>
                        <div>
-                          <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Purpose</label>
-                          <select 
-                             className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500"
+                          <label htmlFor="indent-purpose" className="mb-1.5 block text-sm font-medium text-slate-700">Purpose</label>
+                          <select
+                             id="indent-purpose"
+                             className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                              value={indentData.purpose}
                              onChange={(e) => setIndentData({...indentData, purpose: e.target.value})}
                           >
@@ -398,37 +388,38 @@ const Components: React.FC<ComponentsProps> = ({ user }) => {
                           </select>
                        </div>
 
-                       <div className="bg-gray-50 p-4 rounded-xl mt-4 border border-gray-200">
-                          <p className="text-xs font-bold text-slate-500 uppercase mb-3 border-b border-gray-200 pb-2">Order Summary</p>
-                          <ul className="text-sm space-y-2">
+                       <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+                          <p className="mb-3 border-b border-slate-200 pb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Order Summary</p>
+                          <ul className="space-y-2 text-sm text-slate-700">
                              {cart.map(i => (
-                                <li key={i.id} className="flex justify-between items-center">
-                                   <span>{i.name} <span className="text-slate-400 text-xs">x{i.quantity}</span></span>
-                                   <span className="font-bold">
+                                <li key={i.id} className="flex items-center justify-between gap-3">
+                                   <span>{i.name} <span className="text-xs text-slate-500">x{i.quantity}</span></span>
+                                   <span className="font-medium tabular-nums text-slate-900">
                                       {i.costPerUnit > 0 ? `₹${i.costPerUnit * i.quantity}` : 'Free'}
                                    </span>
                                 </li>
                              ))}
                           </ul>
-                          <div className="flex justify-between items-center pt-3 mt-3 border-t border-gray-200">
-                              <span className="font-bold text-slate-900">Total Estimated Cost</span>
-                              <span className="font-black text-lg text-slate-900">₹{getCartTotal()}</span>
+                          <div className="mt-3 flex items-center justify-between border-t border-slate-200 pt-3">
+                              <span className="text-sm font-semibold text-slate-900">Total Estimated Cost</span>
+                              <span className="font-display text-lg font-bold tabular-nums text-slate-900">₹{getCartTotal()}</span>
                           </div>
                        </div>
 
-                       <div className="pt-4 flex gap-3">
-                          <button 
-                             type="button" 
+                       <div className="flex gap-3 pt-4">
+                          <button
+                             type="button"
                              disabled={isSubmitting}
-                             onClick={() => setShowIndentForm(false)} 
-                             className="flex-1 py-3 text-slate-600 font-bold hover:bg-gray-100 rounded-xl"
+                             onClick={() => setShowIndentForm(false)}
+                             className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                              Back
                           </button>
-                          <button 
-                             type="submit" 
+                          <button
+                             type="submit"
                              disabled={isSubmitting}
-                             className="flex-1 py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-brand-600 shadow-lg disabled:opacity-70"
+                             aria-busy={isSubmitting}
+                             className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                              {isSubmitting ? 'Processing...' : 'Submit Indent'}
                           </button>
@@ -437,27 +428,28 @@ const Components: React.FC<ComponentsProps> = ({ user }) => {
                 </div>
              ) : (
                 <>
-                    <div className="flex-grow overflow-y-auto p-6 space-y-4">
+                    <div className="flex-grow space-y-3 overflow-y-auto p-6">
                     {cart.map(item => (
-                        <div key={item.id} className="flex items-center gap-4 bg-white border border-gray-100 p-3 rounded-xl shadow-sm">
-                            <div className="flex-grow">
-                                <h4 className="font-bold text-slate-900 text-sm">{item.name}</h4>
-                                <div className="flex items-center gap-2 mt-1">
+                        <div key={item.id} className="flex items-center gap-4 rounded-lg border border-slate-200 bg-white p-3">
+                            <div className="min-w-0 flex-grow">
+                                <h4 className="text-sm font-semibold text-slate-900">{item.name}</h4>
+                                <div className="mt-1 flex items-center gap-2">
                                     <span className="text-xs text-slate-500 capitalize">{item.type}</span>
-                                    {item.costPerUnit > 0 && <span className="text-xs bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded">₹{item.costPerUnit}/unit</span>}
+                                    {item.costPerUnit > 0 && <span className="inline-flex items-center rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700 ring-1 ring-inset ring-brand-600/20 tabular-nums">₹{item.costPerUnit}/unit</span>}
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-1">
-                                <button onClick={() => removeFromCart(item.id)} className="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-white rounded shadow-sm transition-all">-</button>
-                                <span className="text-xs font-bold w-4 text-center">{item.quantity}</span>
-                                <button 
+                            <div className="flex items-center gap-1 rounded-lg border border-slate-200 bg-slate-50 p-0.5">
+                                <button onClick={() => removeFromCart(item.id)} aria-label={`Remove one ${item.name}`} className="inline-flex h-10 w-10 items-center justify-center rounded-md text-slate-600 transition-colors hover:bg-white hover:text-slate-900">-</button>
+                                <span className="w-6 text-center text-sm font-semibold tabular-nums text-slate-900">{item.quantity}</span>
+                                <button
                                     onClick={() => {
                                         const catalogItem = catalog.find(c => c.id === item.id);
                                         if (catalogItem && item.quantity < catalogItem.availableQuantity) {
                                             addToCart(catalogItem);
                                         }
-                                    }} 
-                                    className="w-6 h-6 flex items-center justify-center text-slate-600 hover:bg-white rounded shadow-sm transition-all"
+                                    }}
+                                    aria-label={`Add one ${item.name}`}
+                                    className="inline-flex h-10 w-10 items-center justify-center rounded-md text-slate-600 transition-colors hover:bg-white hover:text-slate-900"
                                 >
                                     +
                                 </button>
@@ -466,22 +458,22 @@ const Components: React.FC<ComponentsProps> = ({ user }) => {
                     ))}
                     </div>
 
-                    <div className="p-6 border-t border-gray-100 bg-gray-50">
-                    <div className="flex justify-between mb-4 text-sm font-medium">
+                    <div className="border-t border-slate-200 bg-slate-50 p-6">
+                    <div className="mb-4 flex justify-between text-sm">
                         <span className="text-slate-500">Total Items</span>
-                        <span className="text-slate-900">{cart.reduce((a,b) => a + b.quantity, 0)}</span>
+                        <span className="font-medium tabular-nums text-slate-900">{cart.reduce((a,b) => a + b.quantity, 0)}</span>
                     </div>
                     {getCartTotal() > 0 && (
-                        <div className="flex justify-between mb-4 text-sm font-bold text-brand-600">
+                        <div className="mb-4 flex justify-between text-sm font-semibold text-brand-600">
                             <span>Estimated Cost</span>
-                            <span>₹{getCartTotal()}</span>
+                            <span className="tabular-nums">₹{getCartTotal()}</span>
                         </div>
                     )}
-                    <button 
+                    <button
                         onClick={handleCheckoutClick}
-                        className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-brand-600 transition-colors shadow-lg flex items-center justify-center gap-2"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        Proceed to Indent <FileText className="w-4 h-4" />
+                        Proceed to Indent <FileText className="h-5 w-5" aria-hidden="true" />
                     </button>
                     </div>
                 </>

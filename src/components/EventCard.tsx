@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Calendar as CalendarIcon, MapPin, Clock, Plus, ArrowRight } from 'lucide-react';
+import { MapPin, Clock, Plus, ArrowRight } from 'lucide-react';
 import { Event } from '../../types';
 import { generateGoogleCalendarUrl } from '../utils/calendar';
 import { Link } from 'react-router-dom';
@@ -13,64 +13,63 @@ const EventCard: React.FC<EventCardProps> = ({ event }) => {
   const googleUrl = generateGoogleCalendarUrl(event);
 
   return (
-    <div className="group relative bg-white rounded-3xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 flex flex-col h-full">
+    <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md hover:border-slate-300">
       {/* Image Header */}
-      <div className="relative h-48 overflow-hidden shrink-0">
-        <div className="absolute top-4 left-4 z-10 bg-white/90 backdrop-blur text-brand-900 text-[10px] font-bold px-3 py-1 rounded-full shadow-sm uppercase tracking-wide">
+      <div className="relative aspect-[16/10] shrink-0 overflow-hidden bg-slate-100">
+        <div className="absolute top-3 left-3 z-10 rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-slate-700 shadow-sm">
           {event.category}
         </div>
-        <img 
-          src={event.imageUrl} 
-          alt={event.title} 
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+        <img
+          src={event.imageUrl}
+          alt={event.title}
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60" />
       </div>
 
       {/* Date Badge */}
-      <div className="absolute top-4 right-4 z-10 bg-white rounded-2xl p-2 text-center shadow-lg min-w-[60px]">
-        <span className="block text-[10px] font-bold text-gray-400 uppercase">{event.date.toLocaleString('default', { month: 'short' })}</span>
-        <span className="block text-lg md:text-xl font-black text-brand-600 leading-none">{event.date.getDate()}</span>
+      <div className="absolute top-3 right-3 z-10 min-w-[56px] rounded-lg bg-white px-2 py-1.5 text-center shadow-sm">
+        <span className="block text-xs font-medium uppercase text-slate-500">{event.date.toLocaleString('default', { month: 'short' })}</span>
+        <span className="block font-display text-xl font-bold leading-none text-brand-600">{event.date.getDate()}</span>
       </div>
 
       {/* Content */}
-      <div className="p-5 md:p-6 flex flex-col flex-grow">
+      <div className="flex flex-grow flex-col p-5">
         <Link to={`/events/${event.id}`}>
-            <h3 className="text-lg md:text-xl font-display font-bold text-slate-900 mb-2 line-clamp-1 group-hover:text-brand-600 transition-colors">
+            <h3 className="mb-2 line-clamp-1 font-display text-lg font-semibold text-slate-900 transition-colors group-hover:text-brand-600">
             {event.title}
             </h3>
         </Link>
-        
-        <div className="flex flex-col space-y-2 mb-4">
-          <div className="flex items-center text-slate-500 text-xs md:text-sm">
-            <Clock className="w-3.5 h-3.5 mr-2 text-brand-500" />
+
+        <div className="mb-4 flex flex-col space-y-2">
+          <div className="flex items-center text-sm text-slate-500">
+            <Clock className="mr-2 h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" />
             {event.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </div>
-          <div className="flex items-center text-slate-500 text-xs md:text-sm">
-            <MapPin className="w-3.5 h-3.5 mr-2 text-brand-500" />
+          <div className="flex items-center text-sm text-slate-500">
+            <MapPin className="mr-2 h-4 w-4 shrink-0 text-brand-500" aria-hidden="true" />
             <span className="truncate">{event.location}</span>
           </div>
         </div>
 
-        <p className="text-slate-600 text-xs md:text-sm line-clamp-3 mb-6 flex-grow">
+        <p className="mb-6 line-clamp-3 flex-grow text-sm leading-relaxed text-slate-600">
           {event.description}
         </p>
 
-        <div className="flex gap-2 mt-auto">
-             <a 
+        <div className="mt-auto flex gap-2">
+             <a
             href={googleUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 inline-flex items-center justify-center py-2.5 md:py-3 bg-slate-50 text-slate-900 font-semibold rounded-xl hover:bg-gray-100 transition-all duration-300 text-xs md:text-sm"
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900"
             >
-            <Plus className="w-3.5 h-3.5 mr-2" />
+            <Plus className="h-4 w-4" aria-hidden="true" />
             <span className="hidden md:inline">Add to Cal</span><span className="md:hidden">Cal</span>
             </a>
-            <Link 
+            <Link
             to={`/events/${event.id}`}
-            className="flex-1 inline-flex items-center justify-center py-2.5 md:py-3 bg-slate-900 text-white font-semibold rounded-xl hover:bg-brand-600 transition-all duration-300 text-xs md:text-sm group/btn"
+            className="group/btn inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-brand-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700"
             >
-            Details <ArrowRight className="w-3.5 h-3.5 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+            Details <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5" aria-hidden="true" />
             </Link>
         </div>
       </div>

@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowUpRight, Play, Zap, Cpu, Sparkles } from 'lucide-react';
-import { Project } from '../../types';
+import { ArrowUpRight, Play, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/api';
-import { motion } from 'framer-motion';
+import { FadeIn } from '../components/FadeIn';
 
 const ProjectCard: React.FC<{ project: any }> = ({ project }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -23,18 +22,18 @@ const ProjectCard: React.FC<{ project: any }> = ({ project }) => {
   }, [isHovered, project.video]);
 
   return (
-    <div 
-      className="relative group rounded-3xl overflow-hidden mb-6 break-inside-avoid bg-gray-100 dark:bg-gray-900 cursor-pointer transition-transform duration-500 ease-out hover:scale-[1.02] hover:shadow-2xl h-[300px] md:h-[400px]"
+    <div
+      className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md hover:border-slate-300"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => navigate(`/projects/${project.id}`)}
     >
-      <div className="absolute inset-0 w-full h-full">
-         <img 
-            src={project.image_url || project.image} 
-            alt={project.title} 
+      <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
+         <img
+            src={project.image_url || project.image}
+            alt={project.title}
             loading="lazy"
-            className={`w-full h-full object-cover transition-opacity duration-700 ${isHovered && project.video ? 'opacity-0' : 'opacity-100'}`}
+            className={`h-full w-full object-cover transition-opacity duration-300 ${isHovered && project.video ? 'opacity-0' : 'opacity-100'}`}
          />
          {project.video && (
              <video
@@ -43,38 +42,32 @@ const ProjectCard: React.FC<{ project: any }> = ({ project }) => {
                 loop
                 muted
                 playsInline
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+                className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${isHovered ? 'opacity-100' : 'opacity-0'}`}
              />
          )}
-         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+         <span className="absolute top-3 left-3 rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-slate-700 shadow-sm">
+           {project.category}
+         </span>
+         {project.video && (
+             <div className={`absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm transition-opacity duration-300 ${isHovered ? 'opacity-0' : 'opacity-100'}`}>
+                <Play className="h-4 w-4 fill-current" aria-hidden="true" />
+             </div>
+         )}
       </div>
 
-      {project.video && (
-          <div className={`absolute top-4 right-4 bg-white/20 backdrop-blur-md p-3 rounded-full text-white transition-all duration-300 ${isHovered ? 'opacity-0 scale-75' : 'opacity-100 scale-100'}`}>
-             <Play className="w-4 h-4 fill-current" />
-          </div>
-      )}
-
-      <div className="absolute bottom-0 left-0 w-full p-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-         <div className="flex items-center gap-2 mb-2">
-            <span className="bg-white/20 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
-              {project.category}
-            </span>
-         </div>
-         <h3 className="text-2xl font-display font-bold leading-tight mb-2 drop-shadow-md">{project.title}</h3>
-         <p className={`text-sm text-gray-200 line-clamp-2 mb-4 transition-all duration-500 ${isHovered ? 'opacity-100 max-h-20' : 'opacity-80 max-h-0 md:max-h-20'}`}>
+      <div className="flex flex-1 flex-col p-5">
+         <h3 className="line-clamp-2 font-display text-lg font-semibold text-slate-900 transition-colors group-hover:text-brand-600">{project.title}</h3>
+         <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-slate-600">
             {project.description}
          </p>
-         
-         <div className="flex items-center justify-between border-t border-white/10 pt-4 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
-            <span className="text-xs font-medium text-gray-300">By {project.author}</span>
-            <div className="flex gap-2">
-                <button
-                    className="flex items-center gap-1 px-3 py-1.5 bg-brand-600 rounded-lg text-xs font-bold hover:bg-brand-500 transition-colors shadow-lg"
-                >
-                    View Project <ArrowUpRight className="w-3 h-3" />
-                </button>
-            </div>
+
+         <div className="mt-4 flex items-center justify-between gap-3 border-t border-slate-200 pt-4">
+            <span className="truncate text-sm text-slate-500">By {project.author}</span>
+            <button
+                className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700 hover:underline underline-offset-4"
+            >
+                View Project <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+            </button>
          </div>
       </div>
     </div>
@@ -105,46 +98,42 @@ const Projects: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* ── Hero Override ── */}
-      <div className="relative bg-gradient-to-br from-slate-950 via-brand-950 to-slate-900 pt-24 pb-16 md:pt-40 md:pb-28 overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-600/20 rounded-full blur-[120px]" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/15 rounded-full blur-[100px]" />
-          <div className="absolute inset-0 opacity-[0.04]"
-            style={{ backgroundImage: "linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px)", backgroundSize: "40px 40px" }} />
-        </div>
-        <div className="relative max-w-5xl mx-auto px-6 text-center">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-brand-300 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-8">
-            <Sparkles className="w-3.5 h-3.5" /> Innovation Showcase
-          </span>
-          <h1 className="text-3xl md:text-7xl font-display font-black text-white mb-6 leading-tight">
+      {/* ── Page header ── */}
+      <section className="border-b border-slate-200 bg-white pt-24 pb-10 md:pt-28 md:pb-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <p className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold uppercase tracking-wider text-brand-600">
+            <Sparkles className="h-4 w-4 text-brand-500" aria-hidden="true" /> Innovation Showcase
+          </p>
+          <h1 className="mt-2 font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900">
             Innovation in<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-orange-300">Continuous Motion</span>
+            <span className="text-brand-600">Continuous Motion</span>
           </h1>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600">
             Explore the breakthrough technologies and creative solutions developed by the brilliant minds at REVA IDEA Lab.
           </p>
-          <div className="flex flex-wrap justify-center gap-4 mt-10">
+          <div className="mt-6 flex flex-wrap gap-2">
             {["Real-time Projects", "Industry Standard", "Student Driven", "Impact Focus"].map(s => (
-              <span key={s} className="px-4 py-2 bg-white/10 border border-white/20 rounded-full text-white/80 text-sm font-semibold backdrop-blur">{s}</span>
+              <span key={s} className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 ring-1 ring-inset ring-slate-600/10">{s}</span>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-[1400px] mx-auto px-4 py-16">
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
-            {[1, 2, 3].map(i => <div key={i} className="h-96 bg-gray-100 rounded-3xl" />)}
-          </div>
-        ) : (
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-            {projects.map(proj => (
-               <ProjectCard key={proj.id} project={proj} />
-            ))}
-          </div>
-        )}
-      </div>
+      <section className="bg-slate-50 py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {loading ? (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {[1, 2, 3].map(i => <div key={i} className="h-96 animate-pulse rounded-lg bg-slate-100" />)}
+            </div>
+          ) : (
+            <FadeIn className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {projects.map(proj => (
+                 <ProjectCard key={proj.id} project={proj} />
+              ))}
+            </FadeIn>
+          )}
+        </div>
+      </section>
     </div>
   );
 };

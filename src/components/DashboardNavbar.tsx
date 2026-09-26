@@ -2,8 +2,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
-  User as UserIcon, Settings, LogOut, ChevronDown, 
-  Home, Box, Menu, Shield, Globe
+  Settings, LogOut, ChevronDown,
+  Home, Box, Shield, Globe
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, StaffUser } from '../../types';
@@ -72,107 +72,108 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ user, staffUser, onLo
 
   return (
     <>
-    <nav className="fixed top-0 left-0 right-0 z-[60] py-3 pointer-events-none">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
-          {/* Logo hidden here — shown in sidebar instead */}
-          <div className="hidden md:flex items-center gap-4" />
+    <nav className="fixed inset-x-0 top-0 z-50 border-b border-slate-200 bg-white">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link to="/" className="flex flex-shrink-0 items-center">
+          <img src="/img/logo_orange_new.png" alt="REVA University" className="h-9 w-auto" />
+        </Link>
 
-          <div className="md:hidden" /> {/* Spacer for mobile */}
+        {/* Profile Section */}
+        <div className="flex items-center">
+          {activeUser ? (
+            <div className="relative" ref={profileRef}>
+              <button
+                onClick={() => setProfileOpen(!profileOpen)}
+                aria-haspopup="menu"
+                aria-expanded={profileOpen}
+                className="flex items-center gap-2 rounded-full border border-slate-200 bg-white py-1 pl-1 pr-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+              >
+                <img
+                  src={activeUser.avatar}
+                  alt={activeUser.name}
+                  className="h-8 w-8 rounded-full object-cover ring-1 ring-slate-200"
+                />
+                <span className="hidden max-w-[100px] truncate sm:block">
+                  {activeUser.name.split(" ")[0]}
+                </span>
+                <ChevronDown
+                  className={`h-4 w-4 text-slate-400 transition-transform ${profileOpen ? "rotate-180" : ""}`}
+                  aria-hidden="true"
+                />
+              </button>
 
-          {/* Profile Section */}
-          <div className="flex items-center pointer-events-auto">
-             {activeUser ? (
-               <div className="relative" ref={profileRef}>
-                 <button
-                   onClick={() => setProfileOpen(!profileOpen)}
-                   className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-full border border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm transition-all"
-                 >
-                   <img
-                     src={activeUser.avatar}
-                     alt={activeUser.name}
-                     className="w-8 h-8 rounded-full object-cover ring-2 ring-white/50 shadow-sm"
-                   />
-                   <span className="text-sm font-black text-slate-800 hidden sm:block">
-                     {activeUser.name.split(" ")[0]}
-                   </span>
-                   <ChevronDown
-                     className={`w-3.5 h-3.5 transition-transform duration-300 text-slate-400 ${profileOpen ? 'rotate-180' : ''}`}
-                   />
-                 </button>
+              <AnimatePresence>
+                {profileOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 8 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="absolute right-0 z-50 mt-2 w-56 rounded-xl border border-slate-200 bg-white py-1 shadow-lg"
+                  >
+                    <div className="border-b border-slate-200 px-4 py-3">
+                      <div className="flex items-center gap-1.5">
+                        {(user?.email?.toLowerCase().endsWith("@reva.edu.in") && user?.type === "university") || staffUser ? <Shield className="h-3.5 w-3.5 text-brand-600" aria-hidden="true" /> : <Globe className="h-3.5 w-3.5 text-blue-600" aria-hidden="true" />}
+                        <p className="text-xs font-medium text-slate-500">
+                          {staffUser ? "Staff Access" : (user?.email?.toLowerCase().endsWith("@reva.edu.in") && user?.type === "university") ? "University Access" : "General Access"}
+                        </p>
+                      </div>
+                      <p className="mt-1 truncate text-sm font-semibold text-slate-900">
+                        {activeUser.name}
+                      </p>
+                      <p className="truncate text-sm text-slate-500">
+                        {activeUser.email}
+                      </p>
+                    </div>
 
-                  <AnimatePresence>
-                    {profileOpen && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-[70]"
+                    <div className="py-1">
+                      <button
+                        onClick={() => navigate("/")}
+                        className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                       >
-                        <div className="px-5 py-5 border-b border-slate-50">
-                          <div className="flex items-center gap-2 mb-2">
-                             {(user?.email?.toLowerCase().endsWith("@reva.edu.in") && user?.type === "university") || staffUser ? <Shield className="w-3.5 h-3.5 text-brand-600" /> : <Globe className="w-3.5 h-3.5 text-blue-600" />}
-                            <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest">
-                              {staffUser ? "Staff Access" : (user?.email?.toLowerCase().endsWith("@reva.edu.in") && user?.type === "university") ? "University Access" : "General Access"}
-                            </p>
-                          </div>
-                          <p className="text-base font-black text-slate-900 truncate leading-none mb-1.5">
-                            {activeUser.name}
-                          </p>
-                          <p className="text-xs font-bold text-brand-600 truncate leading-none">
-                            {activeUser.email}
-                          </p>
-                        </div>
+                        <Home className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                        Go to Homepage
+                      </button>
 
-                        <div className="p-1.5 space-y-0.5">
-                          <button
-                            onClick={() => navigate("/")}
-                            className="w-full text-left px-4 py-3 rounded-xl text-sm font-bold flex items-center gap-3 text-slate-600 hover:bg-slate-50 transition-colors group"
-                          >
-                            <Home className="w-4 h-4 text-slate-400 group-hover:text-brand-600 transition-colors" />
-                            Go to Homepage
-                          </button>
+                      {((user?.email?.toLowerCase().endsWith("@reva.edu.in") && user?.type === "university") || staffUser) && (
+                        <button
+                          onClick={() => navigate("/components")}
+                          className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                        >
+                          <Box className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                          Catalog
+                        </button>
+                      )}
 
-                          {((user?.email?.toLowerCase().endsWith("@reva.edu.in") && user?.type === "university") || staffUser) && (
-                            <button
-                              onClick={() => navigate("/components")}
-                              className="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-3 transition-colors group"
-                            >
-                              <Box className="w-4 h-4 text-slate-400 group-hover:text-brand-600 transition-colors" />
-                              Catalog
-                            </button>
-                          )}
+                      <button
+                        onClick={goToSettings}
+                        className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                      >
+                        <Settings className="h-4 w-4 text-slate-400" aria-hidden="true" />
+                        Settings
+                      </button>
+                    </div>
 
-                          <button
-                            onClick={goToSettings}
-                            className="w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 flex items-center gap-3 transition-colors group"
-                          >
-                            <Settings className="w-4 h-4 text-slate-400 group-hover:text-brand-600 transition-colors" />
-                            Settings
-                          </button>
-                        </div>
-
-                        <div className="border-t border-slate-50 p-1.5 bg-slate-50/30">
-                          <button
-                            onClick={logoutHandler}
-                            className="w-full text-left px-4 py-3 rounded-xl text-sm font-black text-red-500 hover:bg-red-50 flex items-center gap-3 transition-all"
-                          >
-                            <LogOut className="w-4 h-4" /> Sign Out
-                          </button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-               </div>
-             ) : (
-               <button
-                 onClick={() => navigate("/login")}
-                 className="px-5 py-2 rounded-full text-sm font-bold bg-slate-900 text-white hover:bg-slate-800 transition-all transform hover:scale-105 pointer-events-auto"
-               >
-                 Sign In
-               </button>
-             )}
-          </div>
+                    <div className="border-t border-slate-200 pt-1">
+                      <button
+                        onClick={logoutHandler}
+                        className="flex w-full items-center gap-3 px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 hover:text-red-700"
+                      >
+                        <LogOut className="h-4 w-4" aria-hidden="true" /> Sign Out
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700"
+            >
+              Sign In
+            </button>
+          )}
         </div>
       </div>
     </nav>

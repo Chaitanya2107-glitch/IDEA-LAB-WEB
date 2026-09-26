@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronRight, Globe, Layers, Package, Calendar, LayoutTemplate, Info, Users, Zap, MessageSquare, Printer, CircuitBoard, LayoutDashboard, UserCircle, Shield } from 'lucide-react';
+import { X, Globe, Layers, Package, Calendar, LayoutTemplate, Info, Users, Zap, MessageSquare, Printer, CircuitBoard, LayoutDashboard, Shield } from 'lucide-react';
 
 interface SideDrawerProps {
   isOpen: boolean;
@@ -43,6 +43,16 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ isOpen, onClose, user, staffUse
   // We show a subset in "Quick Navigation" and the rest in "Discover More"
   const visiblePaths = ["/", "/events", "/gallery", "/projects"];
 
+
+  const isUniversity = user?.email?.toLowerCase().endsWith("@reva.edu.in") && user?.type === "university";
+
+  const itemClass = ({ isActive }: { isActive: boolean }) =>
+    `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium ${
+      isActive
+        ? "bg-brand-50 text-brand-700"
+        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+    }`;
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -51,108 +61,98 @@ const SideDrawer: React.FC<SideDrawerProps> = ({ isOpen, onClose, user, staffUse
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-950/40 backdrop-blur-sm z-[100]"
+            aria-hidden="true"
+            className="fixed inset-0 z-[100] bg-slate-900/50"
           />
           <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 bottom-0 w-full md:w-[400px] bg-slate-900 shadow-2xl z-[101] flex flex-col overflow-hidden"
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="fixed inset-y-0 right-0 z-[101] flex w-full max-w-sm flex-col overflow-y-auto border-l border-slate-200 bg-white shadow-xl"
           >
-            {/* Header / Profile Section */}
-            <div className="relative p-6 pt-12 pb-8 bg-gradient-to-br from-slate-800 to-slate-900 border-b border-white/5">
-              <div className="absolute top-4 right-6 flex items-center justify-end w-full pl-6">
-                <button 
-                  onClick={onClose}
-                  className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
-                >
-                  <X className="w-5 h-5 text-white/70" />
-                </button>
-              </div>
+            <div className="flex h-16 flex-shrink-0 items-center justify-end border-b border-slate-200 px-4">
+              <button
+                onClick={onClose}
+                aria-label="Close menu"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
 
+            {/* Header / Profile Section */}
+            <div className="border-b border-slate-200 px-4 py-6">
               {(user || staffUser) ? (
-                <div className="mt-4">
-                  <div className="flex items-center gap-4 mb-6">
-                    <img 
-                      src={user?.avatar || staffUser?.avatar || `https://ui-avatars.com/api/?name=${user?.name || staffUser?.name}&background=random`} 
-                      className="w-16 h-16 rounded-3xl object-cover ring-4 ring-white/5"
-                      alt="Profile"
-                    />
-                     <div>
-                        <div className={`flex items-center gap-2 mb-1.5 px-2 py-1 ${staffUser ? 'bg-brand-500/10 border-brand-500/20' : (user?.email?.toLowerCase().endsWith("@reva.edu.in") && user?.type === 'university') ? 'bg-brand-500/10 border-brand-500/20' : 'bg-blue-500/10 border-blue-500/20'} border rounded-full w-fit`}>
-                           {staffUser ? <Shield className="w-3 h-3 text-brand-500" /> : (user?.email?.toLowerCase().endsWith("@reva.edu.in") && user?.type === 'university') ? <Shield className="w-3 h-3 text-brand-500" /> : <Globe className="w-3 h-3 text-blue-500" />}
-                           <span className={`text-[9px] font-black uppercase tracking-widest ${staffUser ? 'text-brand-500' : (user?.email?.toLowerCase().endsWith("@reva.edu.in") && user?.type === 'university') ? 'text-brand-500' : 'text-blue-500'}`}>
-                             {staffUser ? "Staff Access" : (user?.email?.toLowerCase().endsWith("@reva.edu.in") && user?.type === "university") ? "University Access" : "General Access"}
-                           </span>
-                        </div>
-                        <h3 className="text-xl font-bold text-white leading-tight">{user?.name || staffUser?.name}</h3>
-                        <p className="text-xs text-slate-400 mt-1 font-medium">{user?.email || staffUser?.email}</p>
-                     </div>
+                <div className="flex items-center gap-4">
+                  <img
+                    src={user?.avatar || staffUser?.avatar || `https://ui-avatars.com/api/?name=${user?.name || staffUser?.name}&background=random`}
+                    className="h-12 w-12 rounded-full object-cover ring-1 ring-slate-200"
+                    alt="Profile"
+                  />
+                  <div className="min-w-0">
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${
+                        staffUser || isUniversity
+                          ? "bg-brand-50 text-brand-700 ring-brand-600/20"
+                          : "bg-blue-50 text-blue-700 ring-blue-600/20"
+                      }`}
+                    >
+                      {staffUser || isUniversity ? <Shield className="h-3 w-3" aria-hidden="true" /> : <Globe className="h-3 w-3" aria-hidden="true" />}
+                      {staffUser ? "Staff Access" : isUniversity ? "University Access" : "General Access"}
+                    </span>
+                    <h3 className="mt-2 truncate font-display text-lg font-semibold text-slate-900">{user?.name || staffUser?.name}</h3>
+                    <p className="truncate text-sm text-slate-500">{user?.email || staffUser?.email}</p>
                   </div>
                 </div>
               ) : (
-                <div className="mt-8 mb-4">
-                   <h3 className="text-2xl font-black text-white tracking-tight">Welcome</h3>
-                   <p className="text-slate-400 text-sm mt-2">Explore our engineering excellence</p>
+                <div>
+                  <h3 className="font-display text-lg font-semibold text-slate-900">Welcome</h3>
+                  <p className="mt-1 text-sm text-slate-500">Explore our engineering excellence</p>
                 </div>
               )}
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-8">
-
-            <div className="grid grid-cols-1 gap-2">
-              <div className="mb-4">
-                <p className="px-4 mb-3 text-[11px] font-black text-brand-500 uppercase tracking-widest opacity-50">Navigation</p>
-                {mainLinks.map((link) => (
-                  <NavLink
-                    key={link.path}
-                    to={link.path}
-                    onClick={onClose}
-                    className={({ isActive }) =>
-                      `flex items-center gap-4 px-5 py-4 rounded-[1.5rem] transition-all ${
-                        isActive ? "bg-white/10 text-white shadow-lg shadow-black/20" : "hover:bg-white/5 text-slate-400 hover:text-white"
-                      }`
-                    }
-                  >
-                    {link.icon && <link.icon className={`w-4 h-4 ${location.pathname === link.path ? "text-brand-500" : "text-slate-500"}`} />}
-                    <span className="font-bold text-base">{link.name}</span>
-                    <ChevronRight className="w-4 h-4 ml-auto opacity-20" />
-                  </NavLink>
-                ))}
+            <div className="flex-1 space-y-6 px-4 py-6">
+              <div>
+                <p className="px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Navigation</p>
+                <div className="mt-2 space-y-1">
+                  {mainLinks.map((link) => (
+                    <NavLink
+                      key={link.path}
+                      to={link.path}
+                      onClick={onClose}
+                      className={itemClass}
+                    >
+                      {link.icon && <link.icon className={`h-5 w-5 ${location.pathname === link.path ? "text-brand-600" : "text-slate-400"}`} aria-hidden="true" />}
+                      <span>{link.name}</span>
+                    </NavLink>
+                  ))}
+                </div>
               </div>
 
               <div>
-                <p className="px-4 mb-3 text-[11px] font-black text-brand-500 uppercase tracking-widest opacity-50">Discover More</p>
-                {secondaryLinks.filter(l => !visiblePaths.includes(l.path)).map((link) => (
-                  <NavLink
-                    key={link.path}
-                    to={link.path}
-                    onClick={onClose}
-                    className={({ isActive }) =>
-                      `flex items-center gap-5 px-5 py-4 rounded-[1.5rem] transition-all border border-transparent ${
-                        isActive ? "bg-white/10 text-white shadow-lg shadow-black/20" : "hover:bg-white/5 text-slate-400 hover:text-white"
-                      }`
-                    }
-                  >
-                    <div className={`p-2.5 rounded-2xl ${location.pathname === link.path ? "bg-brand-500/20 text-brand-500" : "bg-white/5 text-slate-500"}`}>
-                       <link.icon className="w-5 h-5" />
-                    </div>
-                    <span className="font-bold text-base">{link.name}</span>
-                    <ChevronRight className="w-4 h-4 ml-auto opacity-10" />
-                  </NavLink>
-                ))}
+                <p className="px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Discover More</p>
+                <div className="mt-2 space-y-1">
+                  {secondaryLinks.filter(l => !visiblePaths.includes(l.path)).map((link) => (
+                    <NavLink
+                      key={link.path}
+                      to={link.path}
+                      onClick={onClose}
+                      className={itemClass}
+                    >
+                      <link.icon className={`h-5 w-5 ${location.pathname === link.path ? "text-brand-600" : "text-slate-400"}`} aria-hidden="true" />
+                      <span>{link.name}</span>
+                    </NavLink>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-            <div className="p-8 border-t border-white/5 flex items-center justify-between text-slate-500 bg-black/20">
-              <p className="text-xs font-medium">© 2026 REVA IDEA Lab</p>
-              <div className="flex gap-4">
-                <Globe className="w-4 h-4 opacity-30" />
-                <Layers className="w-4 h-4 opacity-30" />
-              </div>
+            <div className="border-t border-slate-200 px-4 py-4">
+              <p className="text-xs text-slate-500">© 2026 REVA IDEA Lab</p>
             </div>
           </motion.div>
         </>

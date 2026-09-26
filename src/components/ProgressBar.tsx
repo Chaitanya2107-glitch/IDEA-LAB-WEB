@@ -22,15 +22,7 @@ const ProgressBar: React.FC = () => {
           animate={{ width: '100%', opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            height: '3px',
-            background: '#f37021', // Primary Orange
-            zIndex: 9999,
-            boxShadow: '0 0 10px rgba(243, 112, 33, 0.5)'
-          }}
+          className="fixed left-0 top-0 z-[9999] h-[3px] bg-brand-500"
         />
       )}
     </AnimatePresence>

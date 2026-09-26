@@ -50,7 +50,7 @@ const Hero: React.FC = () => {
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-black">
+    <section className="relative h-[100svh] min-h-[560px] w-full overflow-hidden bg-slate-900">
       
       <AnimatePresence initial={false}>
         <motion.div
@@ -58,94 +58,71 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 1, ease: "easeInOut" }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
           className="absolute inset-0"
         >
           <img 
             src={SLIDES[currentSlide].image} 
             alt={SLIDES[currentSlide].title} 
             loading={currentSlide === 0 ? "eager" : "lazy"}
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
           />
-          {/* Gradients for text readability */}
-          <div className="absolute inset-0 bg-black/50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-900/90 via-transparent to-black/30 opacity-80" />
-          <div className="absolute inset-0 bg-noise opacity-10 mix-blend-overlay" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/50 to-slate-950/30" />
         </motion.div>
       </AnimatePresence>
 
       {/* Content Layer */}
-      <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-4 sm:px-6 lg:px-8">
-        <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, staggerChildren: 0.2 }}
-          className="max-w-6xl"
-        >
-          <motion.span 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="inline-block px-4 py-2 mb-6 text-sm font-bold tracking-widest text-brand-400 uppercase bg-black/50 backdrop-blur-md rounded-full border border-brand-500/30"
-          >
-            Welcome to
-          </motion.span>
-          
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-display font-black text-white leading-tight mb-6 drop-shadow-2xl"
-          >
-            REVA University <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 via-brand-500 to-vivid-pink">
-              AICTE IDEA LAB
-            </span>
-          </motion.h1>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-center px-4 pt-16 text-center sm:px-6 lg:px-8"
+      >
+        <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white ring-1 ring-inset ring-white/20">
+          Welcome to
+        </span>
 
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="text-xl md:text-2xl text-gray-200 mb-10 max-w-3xl mx-auto font-light leading-relaxed"
-          >
-            {SLIDES[currentSlide].subtitle}
-          </motion.p>
+        <h1 className="mt-6 font-display text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+          REVA University
+          <span className="block text-brand-400">
+            AICTE IDEA LAB
+          </span>
+        </h1>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <Link to="/gallery" className="px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-lg shadow-brand-600/30 flex items-center group">
-              Explore Gallery <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link to="/events" className="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 rounded-full font-bold text-lg transition-all transform hover:scale-105">
-              Upcoming Events
-            </Link>
-          </motion.div>
-        </motion.div>
-      </div>
+        <p className="mt-6 max-w-2xl text-lg text-slate-200 sm:text-xl">
+          {SLIDES[currentSlide].subtitle}
+        </p>
+
+        <div className="mt-10 flex flex-col gap-3 sm:flex-row">
+          <Link to="/gallery" className="group inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-700">
+            Explore Gallery <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          </Link>
+          <Link to="/events" className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-base font-semibold text-slate-900 shadow-sm transition-colors hover:bg-slate-100">
+            Upcoming Events
+          </Link>
+        </div>
+      </motion.div>
 
       {/* Slider Controls */}
-      <div className="absolute bottom-10 right-10 z-20 hidden md:flex space-x-4">
-        <button onClick={prevSlide} className="p-3 bg-black/30 hover:bg-black/50 backdrop-blur-md text-white rounded-full border border-white/10 transition-all hover:scale-110 active:scale-95">
-          <ChevronLeft className="w-6 h-6" />
+      <div className="absolute bottom-10 right-10 z-20 hidden gap-3 md:flex">
+        <button onClick={prevSlide} aria-label="Previous slide" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-inset ring-white/25 transition-colors hover:bg-white/20">
+          <ChevronLeft className="h-5 w-5" aria-hidden="true" />
         </button>
-        <button onClick={nextSlide} className="p-3 bg-black/30 hover:bg-black/50 backdrop-blur-md text-white rounded-full border border-white/10 transition-all hover:scale-110 active:scale-95">
-          <ChevronRight className="w-6 h-6" />
+        <button onClick={nextSlide} aria-label="Next slide" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-inset ring-white/25 transition-colors hover:bg-white/20">
+          <ChevronRight className="h-5 w-5" aria-hidden="true" />
         </button>
       </div>
 
       {/* Indicators */}
-       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 flex space-x-2">
+      <div className="absolute bottom-10 left-1/2 z-20 flex -translate-x-1/2 gap-2">
         {SLIDES.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentSlide(index)}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              index === currentSlide ? 'w-8 bg-brand-500' : 'w-2 bg-white/30 hover:bg-white/50'
+            aria-label={`Go to slide ${index + 1}`}
+            aria-current={index === currentSlide ? "true" : undefined}
+            className={`transition-colors ${
+              index === currentSlide ? 'h-1.5 w-8 rounded-full bg-white' : 'h-1.5 w-4 rounded-full bg-white/40 hover:bg-white/70'
             }`}
           />
         ))}

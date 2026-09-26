@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Home, ClipboardList, Settings, User, LucideIcon, MoreHorizontal, ChevronUp, Menu } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -52,22 +51,20 @@ const BottomNav: React.FC<BottomNavProps> = ({ items, activeId, onTabChange, isS
   const isMoreActive = moreItems.some(item => item.id === activeId);
 
   return (
-    <div className="md:hidden fixed bottom-6 left-6 right-6 z-[100]">
-      <div className="relative" ref={moreRef}>
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white md:hidden">
+      <div className="relative mx-auto max-w-md" ref={moreRef}>
         {/* --- Sub-menu for "More" --- */}
         <AnimatePresence>
           {isMoreOpen && (
             <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 15, scale: 0.95 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute bottom-[calc(100%+12px)] right-0 w-52 bg-white/90 backdrop-blur-2xl rounded-[2.5rem] border border-white/50 shadow-2xl p-2.5 overflow-hidden flex flex-col gap-1.5 shadow-brand-500/10"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="absolute bottom-full right-2 z-50 mb-2 w-56 rounded-xl border border-slate-200 bg-white py-1 shadow-lg"
             >
-              <div className="px-5 py-3 border-b border-slate-50 mb-1">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Management Lab</p>
-              </div>
-              
+              <p className="border-b border-slate-200 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Management Lab</p>
+
               {moreItems.map(item => (
                 <button
                   key={item.id}
@@ -75,18 +72,14 @@ const BottomNav: React.FC<BottomNavProps> = ({ items, activeId, onTabChange, isS
                     onTabChange?.(item.id);
                     setIsMoreOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl transition-all ${
-                    activeId === item.id 
-                    ? "bg-brand-50 text-brand-600 shadow-sm" 
-                    : "text-slate-500 hover:bg-slate-50"
+                  className={`flex w-full items-center gap-3 px-4 py-2 text-left text-sm ${
+                    activeId === item.id
+                      ? "bg-brand-50 text-brand-700"
+                      : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                   }`}
                 >
-                  <div className={`p-2 rounded-xl ${activeId === item.id ? "bg-white text-brand-600" : "bg-slate-50 text-slate-400"}`}>
-                    <item.icon className="w-4 h-4" />
-                  </div>
-                  <span className={`text-[11px] font-black uppercase tracking-wider ${activeId === item.id ? "opacity-100" : "opacity-80"}`}>
-                    {item.name}
-                  </span>
+                  <item.icon className={`h-4 w-4 ${activeId === item.id ? "text-brand-600" : "text-slate-400"}`} aria-hidden="true" />
+                  {item.name}
                 </button>
               ))}
             </motion.div>
@@ -94,10 +87,10 @@ const BottomNav: React.FC<BottomNavProps> = ({ items, activeId, onTabChange, isS
         </AnimatePresence>
 
         {/* --- Main Navigation Bar --- */}
-        <div className="bg-white/80 backdrop-blur-2xl border border-white/60 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] flex justify-between items-center p-2.5">
+        <div className="flex items-stretch justify-around px-2">
           {displayItems.map((item) => {
             const isActive = activeId === item.id;
-            
+
             return (
               <button
                 key={item.id}
@@ -105,25 +98,13 @@ const BottomNav: React.FC<BottomNavProps> = ({ items, activeId, onTabChange, isS
                   onTabChange?.(item.id);
                   setIsMoreOpen(false);
                 }}
-                className={`relative flex flex-col items-center justify-center min-w-[64px] transition-all duration-500 ${
-                  isActive ? "bg-white shadow-xl shadow-brand-500/10 rounded-[2rem] px-4 py-3" : "px-3 py-3"
+                aria-current={isActive ? "page" : undefined}
+                className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-xs font-medium transition-colors ${
+                  isActive ? "text-brand-600" : "text-slate-500 hover:text-slate-900"
                 }`}
               >
-                <item.icon className={`w-5 h-5 transition-all duration-300 ${isActive ? 'text-brand-600' : 'text-slate-400'}`} />
-                {isActive && (
-                  <motion.span 
-                    layoutId="label"
-                    className="text-[9px] font-black uppercase tracking-widest text-brand-600 mt-1.5"
-                  >
-                    {item.name}
-                  </motion.span>
-                )}
-                {isActive && (
-                   <motion.div 
-                     layoutId="cursor"
-                     className="absolute -bottom-1 w-1 h-1 bg-brand-600 rounded-full"
-                   />
-                )}
+                <item.icon className={`h-5 w-5 ${isActive ? "text-brand-600" : "text-slate-400"}`} aria-hidden="true" />
+                <span>{item.name}</span>
               </button>
             );
           })}
@@ -131,31 +112,26 @@ const BottomNav: React.FC<BottomNavProps> = ({ items, activeId, onTabChange, isS
           {showMore ? (
             <button
               onClick={() => setIsMoreOpen(!isMoreOpen)}
-              className={`relative flex flex-col items-center justify-center min-w-[64px] transition-all duration-500 rounded-[2rem] px-4 py-3 ${
-                isMoreActive || isMoreOpen ? "bg-brand-50 text-brand-600" : "text-slate-400 hover:bg-slate-50"
+              aria-expanded={isMoreOpen}
+              className={`flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-xs font-medium transition-colors ${
+                isMoreActive || isMoreOpen ? "text-brand-600" : "text-slate-500 hover:text-slate-900"
               }`}
             >
-              <div className="relative">
-                {isMoreOpen ? <ChevronUp className="w-5 h-5" /> : <MoreHorizontal className="w-5 h-5" />}
+              <span className="relative">
+                {isMoreOpen ? <ChevronUp className="h-5 w-5" aria-hidden="true" /> : <MoreHorizontal className={`h-5 w-5 ${isMoreActive ? "text-brand-600" : "text-slate-400"}`} aria-hidden="true" />}
                 {!isMoreOpen && isMoreActive && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-brand-600 rounded-full ring-2 ring-white" />
+                  <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-brand-500 ring-2 ring-white" />
                 )}
-              </div>
-              {(isMoreActive || isMoreOpen) && (
-                <span className="text-[9px] font-black uppercase tracking-widest mt-1.5 italic">
-                  More
-                </span>
-              )}
+              </span>
+              <span>More</span>
             </button>
           ) : (
             <button
               onClick={() => window.dispatchEvent(new CustomEvent('toggleSideDrawer'))}
-              className="flex flex-col items-center justify-center min-w-[64px] transition-all duration-500 rounded-[2rem] px-4 py-3 text-slate-400 hover:bg-slate-50"
+              className="flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 text-xs font-medium text-slate-500 transition-colors hover:text-slate-900"
             >
-              <Menu className="w-5 h-5 text-brand-600" />
-              <span className="text-[9px] font-black uppercase tracking-widest mt-1.5 text-brand-600">
-                Menu
-              </span>
+              <Menu className="h-5 w-5 text-slate-400" aria-hidden="true" />
+              <span>Menu</span>
             </button>
           )}
         </div>

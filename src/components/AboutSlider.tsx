@@ -50,69 +50,69 @@ const AboutSlider: React.FC = () => {
   const currentFeature = FEATURES[currentIndex];
 
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-brand-50 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
-      <div className="absolute bottom-0 right-0 w-96 h-96 bg-vivid-pink/10 rounded-full blur-3xl translate-x-1/2 translate-y-1/2"></div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="mb-12">
-          <span className="text-brand-600 font-bold tracking-wider uppercase text-sm flex items-center gap-2">
-            <Zap className="w-4 h-4" /> About The Lab
+    <section className="bg-white py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-10 max-w-2xl md:mb-14">
+          <span className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand-600 sm:text-sm">
+            <Zap className="h-4 w-4" aria-hidden="true" /> About The Lab
           </span>
-          <h2 className="text-4xl font-display font-bold text-slate-900 mt-2">Center for Excellence</h2>
+          <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">Center for Excellence</h2>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid items-center gap-6 lg:grid-cols-2 lg:gap-8">
           
           {/* Content Side */}
-          <div className={`space-y-8 transition-all duration-500 transform ${isAnimating ? 'opacity-50 translate-y-4' : 'opacity-100 translate-y-0'}`}>
-            <div className="inline-block px-4 py-1 bg-slate-100 rounded-full text-slate-600 text-xs font-bold uppercase tracking-wide">
+          <div className={`space-y-6 transition-opacity duration-300 ${isAnimating ? 'opacity-50' : 'opacity-100'}`}>
+            <span className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 ring-1 ring-inset ring-slate-600/10">
               {currentFeature.tag}
-            </div>
+            </span>
             
-            <h3 className="text-3xl md:text-5xl font-display font-bold text-slate-900 leading-tight">
+            <h3 className="font-display text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
               {currentFeature.title}
             </h3>
             
-            <p className="text-lg text-slate-600 leading-relaxed">
+            <p className="text-base leading-relaxed text-slate-600 sm:text-lg">
               {currentFeature.description}
             </p>
 
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               {currentFeature.points.map((point, idx) => (
-                <li key={idx} className="flex items-center space-x-3 text-slate-700 font-medium">
-                  <CheckCircle2 className="w-5 h-5 text-brand-600 flex-shrink-0" />
+                <li key={idx} className="flex items-center gap-3 text-base text-slate-700">
+                  <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-brand-500" aria-hidden="true" />
                   <span>{point}</span>
                 </li>
               ))}
             </ul>
 
             {/* Controls */}
-            <div className="flex items-center space-x-6 pt-8">
-              <div className="flex space-x-2">
+            <div className="flex items-center gap-6 pt-4">
+              <div className="flex gap-2">
                 <button 
                   onClick={prevSlide}
-                  className="p-3 rounded-full border border-slate-200 hover:bg-slate-50 hover:border-brand-300 transition-all active:scale-95"
+                  aria-label="Previous slide"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-600 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900"
                 >
-                  <ChevronLeft className="w-5 h-5 text-slate-600" />
+                  <ChevronLeft className="h-5 w-5" aria-hidden="true" />
                 </button>
                 <button 
                   onClick={nextSlide}
-                  className="p-3 rounded-full border border-slate-200 hover:bg-slate-50 hover:border-brand-300 transition-all active:scale-95"
+                  aria-label="Next slide"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-600 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900"
                 >
-                  <ChevronRight className="w-5 h-5 text-slate-600" />
+                  <ChevronRight className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
               
               {/* Progress Dots */}
-              <div className="flex space-x-2">
+              <div className="flex gap-2">
                 {FEATURES.map((_, idx) => (
                   <button
                     key={idx}
                     onClick={() => goToSlide(idx)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      idx === currentIndex ? 'w-8 bg-brand-600' : 'w-2 bg-slate-200 hover:bg-slate-300'
+                    aria-label={`Go to slide ${idx + 1}`}
+                    aria-current={idx === currentIndex ? "true" : undefined}
+                    className={`h-2 rounded-full transition-colors ${
+                      idx === currentIndex ? 'w-8 bg-brand-600' : 'w-2 bg-slate-300 hover:bg-slate-400'
                     }`}
                   />
                 ))}
@@ -121,16 +121,12 @@ const AboutSlider: React.FC = () => {
           </div>
 
           {/* Image Side */}
-          <div className="relative h-[400px] lg:h-[500px] w-full group perspective">
-            <div className="absolute inset-0 bg-brand-600 rounded-3xl transform rotate-3 scale-95 opacity-20 transition-transform group-hover:rotate-6 duration-500"></div>
-            <div className={`relative h-full w-full rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 transform ${isAnimating ? 'scale-95 opacity-80' : 'scale-100 opacity-100'}`}>
-              <img 
-                src={currentFeature.image} 
-                alt={currentFeature.title} 
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-tr from-brand-900/40 to-transparent mix-blend-multiply"></div>
-            </div>
+          <div className="aspect-[4/3] w-full overflow-hidden rounded-2xl bg-slate-100">
+            <img 
+              src={currentFeature.image} 
+              alt={currentFeature.title} 
+              className={`h-full w-full object-cover transition-opacity duration-300 ${isAnimating ? 'opacity-80' : 'opacity-100'}`}
+            />
           </div>
 
         </div>

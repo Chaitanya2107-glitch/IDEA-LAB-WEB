@@ -1,7 +1,7 @@
 // src/components/SlotBookingModal.tsx
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calendar, CheckCircle, AlertCircle, Loader2, Clock, Users } from "lucide-react";
+import { X, Calendar, CheckCircle, AlertCircle, Loader2 } from "lucide-react";
 import { authService } from "../services/api";
 import { User, SlotBooking } from "../../types";
 import { getLabStatus } from "../utils/labClosure";
@@ -109,90 +109,101 @@ const SlotBookingModal: React.FC<SlotBookingModalProps> = ({
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
+        <div className="fixed inset-0 z-[110] flex items-end justify-center p-4 sm:items-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             onClick={() => !loading && onClose()}
-            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+            className="absolute inset-0 bg-slate-900/50"
           />
-          
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="relative w-full max-w-xl bg-white rounded-[40px] shadow-2xl overflow-y-auto max-h-[90vh]"
-          >
-            <div className="p-6 sm:p-10 md:p-14">
-              <div className="flex justify-between items-start mb-10">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-brand-600 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-brand-600/30">
-                    <Calendar className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">Reserve Slot</h2>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Idea Lab Protocol v3.0</p>
-                  </div>
-                </div>
-                <button 
-                  onClick={onClose}
-                  disabled={loading}
-                  className="p-2 hover:bg-slate-50 rounded-full text-slate-400 transition-colors"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
 
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="slot-booking-modal-title"
+            className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl ring-1 ring-slate-200"
+          >
+            <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+                  <Calendar className="h-5 w-5" aria-hidden="true" />
+                </div>
+                <div>
+                  <h2 id="slot-booking-modal-title" className="font-display text-xl font-semibold text-slate-900">Reserve Slot</h2>
+                  <p className="text-xs text-slate-500">Idea Lab Protocol v3.0</p>
+                </div>
+              </div>
+              <button
+                onClick={onClose}
+                disabled={loading}
+                aria-label="Close"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+              >
+                <X className="h-5 w-5" aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="px-6 py-5">
               <AnimatePresence mode="wait">
                 {success ? (
-                  <motion.div 
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="py-12 text-center"
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="py-8 text-center"
+                    role="status"
                   >
-                    <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <CheckCircle className="w-10 h-10 text-green-600" />
+                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-50 text-green-600">
+                      <CheckCircle className="h-6 w-6" aria-hidden="true" />
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-900 mb-2">Request Submitted!</h2>
-                    <p className="text-slate-500 font-medium tracking-tight">Your slot request is being processed...</p>
+                    <h2 className="font-display text-xl font-semibold text-slate-900">Request Submitted!</h2>
+                    <p className="mt-1 text-sm text-slate-500">Your slot request is being processed...</p>
                   </motion.div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-8">
+                  <form onSubmit={handleSubmit} className="space-y-6">
                     {error && (
-                      <div className="p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-600 text-sm font-bold">
-                        <AlertCircle className="w-5 h-5 shrink-0" />
+                      <div role="alert" className="flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                        <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
                         {error}
                       </div>
                     )}
 
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       {/* Date Selection */}
-                      <div className="relative group">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[2px] mb-3 block ml-1">Preferred Date</label>
+                      <div>
+                        <label htmlFor="slot-date" className="mb-1.5 block text-sm font-medium text-slate-700">Preferred Date</label>
                         <div className="relative">
-                          <input 
+                          <input
+                            id="slot-date"
                             required
-                            type="date" 
-                            className={`w-full px-6 py-4 bg-slate-50 border rounded-2xl focus:outline-none focus:ring-4 transition-all font-bold text-slate-800 ${
-                              labStatus.isClosed 
-                                ? "border-red-200 focus:ring-red-500/10 focus:border-red-500" 
-                                : "border-slate-100 focus:ring-brand-500/10 focus:border-brand-500"
+                            type="date"
+                            aria-invalid={labStatus.isClosed}
+                            className={`block w-full rounded-lg border bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500 ${
+                              labStatus.isClosed
+                                ? "border-red-500 pr-10 focus:border-red-500 focus:ring-red-500/20"
+                                : "border-slate-300 focus:border-brand-500 focus:ring-brand-500/20"
                             }`}
                             value={formData.date}
                             onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                           />
                           {labStatus.isClosed && (
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-red-500">
-                              <AlertCircle className="w-5 h-5" />
+                            <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-red-600">
+                              <AlertCircle className="h-4 w-4" aria-hidden="true" />
                             </div>
                           )}
                         </div>
                         {labStatus.isClosed && (
-                          <motion.p 
-                            initial={{ opacity: 0, y: -5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="text-[10px] font-black text-red-500 mt-2 ml-1 uppercase tracking-wider"
+                          <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.2 }}
+                            className="mt-1.5 text-sm text-red-600"
                           >
                             {labStatus.reason}
                           </motion.p>
@@ -200,10 +211,11 @@ const SlotBookingModal: React.FC<SlotBookingModalProps> = ({
                       </div>
 
                       {/* Session Type */}
-                      <div className="relative group">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[2px] mb-3 block ml-1">Session Type</label>
-                        <select 
-                          className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all font-bold text-slate-800 appearance-none cursor-pointer"
+                      <div>
+                        <label htmlFor="slot-session-type" className="mb-1.5 block text-sm font-medium text-slate-700">Session Type</label>
+                        <select
+                          id="slot-session-type"
+                          className="block w-full cursor-pointer rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                           value={formData.sessionType}
                           onChange={(e) => setFormData({ ...formData, sessionType: e.target.value })}
                         >
@@ -212,31 +224,32 @@ const SlotBookingModal: React.FC<SlotBookingModalProps> = ({
                       </div>
 
                       {/* Time Slots */}
-                      <div className="relative group">
-                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-[2px] mb-3 block ml-1">Time Slot</label>
+                      <div>
+                        <p className="mb-1.5 block text-sm font-medium text-slate-700">Time Slot</p>
                         <div className="grid grid-cols-2 gap-3">
                           {TIME_SLOTS.map((slot, i) => (
                             <button
                               key={i}
                               type="button"
+                              aria-pressed={formData.slotIndex === i}
                               onClick={() => setFormData({ ...formData, slotIndex: i })}
-                              className={`px-4 py-4 rounded-2xl border text-left transition-all relative overflow-hidden group/btn ${
-                                formData.slotIndex === i 
-                                  ? "border-brand-600 bg-brand-50 text-brand-700 shadow-md shadow-brand-600/10" 
-                                  : "border-slate-100 bg-slate-50 text-slate-500 hover:border-brand-200"
+                              className={`relative rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
+                                formData.slotIndex === i
+                                  ? "border-brand-600 bg-brand-50 text-brand-700 ring-1 ring-brand-600"
+                                  : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
                               }`}
                             >
-                              <div className="flex flex-col">
-                                <span className="text-[10px] font-black uppercase tracking-wider mb-1">
+                              <div className="flex flex-col pr-5">
+                                <span className="font-medium">
                                   {slot.label.split('(')[0]}
                                 </span>
-                                <span className={`text-xs font-bold font-mono ${formData.slotIndex === i ? "text-brand-600" : "text-slate-400"}`}>
+                                <span className={`mt-0.5 text-xs tabular-nums ${formData.slotIndex === i ? "text-brand-700" : "text-slate-500"}`}>
                                   {slot.start} — {slot.end}
                                 </span>
                               </div>
                               {formData.slotIndex === i && (
                                 <motion.div layoutId="slot-check" className="absolute top-3 right-3">
-                                  <CheckCircle className="w-3.5 h-3.5 text-brand-600" />
+                                  <CheckCircle className="h-4 w-4 text-brand-600" aria-hidden="true" />
                                 </motion.div>
                               )}
                             </button>
@@ -245,22 +258,24 @@ const SlotBookingModal: React.FC<SlotBookingModalProps> = ({
                       </div>
 
                       {/* Attendees & Purpose */}
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
                         <div className="md:col-span-1">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-[2px] mb-3 block ml-1">Pax</label>
-                          <input 
+                          <label htmlFor="slot-attendees" className="mb-1.5 block text-sm font-medium text-slate-700">Pax</label>
+                          <input
+                            id="slot-attendees"
                             type="number" min={1} max={50}
-                            className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all font-bold text-slate-800"
+                            className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                             value={formData.attendees}
                             onChange={(e) => setFormData({ ...formData, attendees: parseInt(e.target.value) || 1 })}
                           />
                         </div>
                         <div className="md:col-span-3">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-[2px] mb-3 block ml-1">Purpose / Notes</label>
-                          <input 
+                          <label htmlFor="slot-purpose" className="mb-1.5 block text-sm font-medium text-slate-700">Purpose / Notes</label>
+                          <input
+                            id="slot-purpose"
                             required
                             placeholder="Briefly describe your activity..."
-                            className="w-full px-6 py-4 bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all font-bold text-slate-800"
+                            className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                             value={formData.purpose}
                             onChange={(e) => setFormData({ ...formData, purpose: e.target.value })}
                           />
@@ -268,14 +283,15 @@ const SlotBookingModal: React.FC<SlotBookingModalProps> = ({
                       </div>
                     </div>
 
-                    <button 
-                      type="submit" 
+                    <button
+                      type="submit"
                       disabled={loading || labStatus.isClosed}
-                      className="w-full py-5 bg-slate-900 hover:bg-brand-600 disabled:bg-slate-100 disabled:text-slate-300 text-white rounded-[20px] font-black text-lg transition-all shadow-xl active:scale-[0.98] flex items-center justify-center gap-3 mt-4"
+                      aria-busy={loading}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
+                      {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : (
                         <div className="flex items-center gap-2">
-                          <CheckCircle className="w-5 h-5" />
+                          <CheckCircle className="h-5 w-5" aria-hidden="true" />
                           <span>Submit Request</span>
                         </div>
                       )}

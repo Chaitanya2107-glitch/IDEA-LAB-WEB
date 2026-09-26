@@ -1,22 +1,26 @@
 
 import React from 'react';
-import { FileText, Download, ExternalLink, BookOpen, Video } from 'lucide-react';
+import { FileText, Download, ExternalLink, Video } from 'lucide-react';
 // Assuming this page remains static for now
 const Resources: React.FC = () => { // Assuming this page remains static for now
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="max-w-7xl mx-auto px-4 py-16">
-         <h1 className="text-4xl font-display font-bold text-slate-900 mb-2">Student Resources</h1>
-         <p className="text-slate-500 mb-12 text-lg">Manuals, Software, and Guidelines for IDEA Lab equipment.</p>
+    <div className="min-h-screen bg-white">
+      <section className="border-b border-slate-200 bg-white pt-24 pb-10 md:pt-28 md:pb-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900">Student Resources</h1>
+          <p className="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600">Manuals, Software, and Guidelines for IDEA Lab equipment.</p>
+        </div>
+      </section>
 
-         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+         <div className="grid gap-6 lg:gap-8 md:grid-cols-2">
+
             {/* Downloads */}
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-               <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                  <FileText className="w-6 h-6 text-brand-600" /> Manuals & Guidelines
+            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+               <h2 className="mb-6 flex items-center gap-3 font-display text-xl font-semibold text-slate-900">
+                  <FileText className="h-5 w-5 text-brand-500" aria-hidden="true" /> Manuals & Guidelines
                </h2>
-               <div className="space-y-4">
+               <div className="space-y-3">
                   {[
                      "IDEA Lab Safety Protocol (PDF)",
                      "3D Printer Operation Manual (v2.1)",
@@ -24,53 +28,53 @@ const Resources: React.FC = () => { // Assuming this page remains static for now
                      "Project Proposal Template (DOCX)",
                      "Indent Request Format"
                   ].map((item, i) => (
-                     <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-brand-50 group cursor-pointer transition-colors">
-                        <span className="font-medium text-slate-700">{item}</span>
-                        <Download className="w-5 h-5 text-slate-400 group-hover:text-brand-600" />
+                     <div key={i} className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50">
+                        <span className="text-sm font-medium text-slate-700">{item}</span>
+                        <Download className="h-5 w-5 shrink-0 text-slate-400 transition-colors group-hover:text-brand-600" aria-hidden="true" />
                      </div>
                   ))}
                </div>
             </div>
 
             {/* Software Links */}
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
-               <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                  <ExternalLink className="w-6 h-6 text-blue-600" /> Software Tools
+            <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+               <h2 className="mb-6 flex items-center gap-3 font-display text-xl font-semibold text-slate-900">
+                  <ExternalLink className="h-5 w-5 text-brand-500" aria-hidden="true" /> Software Tools
                </h2>
-               <div className="space-y-4">
+               <div className="space-y-3">
                   {[
                      { name: "Ultimaker Cura (Slicer)", desc: "For FDM 3D Printing" },
                      { name: "Autodesk Fusion 360", desc: "CAD/CAM Design (Student License)" },
                      { name: "Arduino IDE", desc: "Microcontroller Programming" },
                      { name: "KiCad PCB", desc: "Electronics Design Automation" }
                   ].map((item, i) => (
-                     <div key={i} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-blue-50 group cursor-pointer transition-colors">
+                     <div key={i} className="group flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-slate-200 p-4 transition-colors hover:bg-slate-50">
                         <div>
-                           <p className="font-bold text-slate-900">{item.name}</p>
-                           <p className="text-xs text-slate-500">{item.desc}</p>
+                           <p className="text-sm font-semibold text-slate-900">{item.name}</p>
+                           <p className="text-sm text-slate-500">{item.desc}</p>
                         </div>
-                        <ExternalLink className="w-5 h-5 text-slate-400 group-hover:text-blue-600" />
+                        <ExternalLink className="h-5 w-5 shrink-0 text-slate-400 transition-colors group-hover:text-brand-600" aria-hidden="true" />
                      </div>
                   ))}
                </div>
             </div>
 
             {/* Tutorials */}
-             <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 md:col-span-2">
-               <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-                  <Video className="w-6 h-6 text-purple-600" /> Video Tutorials
+             <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm md:col-span-2">
+               <h2 className="mb-6 flex items-center gap-3 font-display text-xl font-semibold text-slate-900">
+                  <Video className="h-5 w-5 text-brand-500" aria-hidden="true" /> Video Tutorials
                </h2>
-               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {[1, 2, 3].map((_, i) => (
-                     <div key={i} className="relative aspect-video bg-slate-900 rounded-xl overflow-hidden group cursor-pointer">
-                        <img src={`https://picsum.photos/seed/tutorial${i}/600/400`} alt="Tutorial" className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity" />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                           <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
+                     <div key={i} className="group relative aspect-video cursor-pointer overflow-hidden rounded-lg bg-slate-100">
+                        <img src={`https://picsum.photos/seed/tutorial${i}/600/400`} alt="Tutorial" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
+                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-t from-slate-950/60 to-transparent">
+                           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-950/40 text-white ring-1 ring-inset ring-white/25">
                               <PlayIcon />
                            </div>
                         </div>
                         <div className="absolute bottom-4 left-4 right-4">
-                           <p className="text-white font-bold text-sm">Introduction to {i === 0 ? '3D Printing' : i === 1 ? 'CNC Machining' : 'PCB Design'}</p>
+                           <p className="text-sm font-semibold text-white">Introduction to {i === 0 ? '3D Printing' : i === 1 ? 'CNC Machining' : 'PCB Design'}</p>
                         </div>
                      </div>
                   ))}
@@ -84,7 +88,7 @@ const Resources: React.FC = () => { // Assuming this page remains static for now
 };
 
 const PlayIcon = () => (
-   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
 );
 
 export default Resources;

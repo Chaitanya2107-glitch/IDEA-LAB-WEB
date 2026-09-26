@@ -101,7 +101,7 @@ export const StlViewer: React.FC<StlViewerProps> = ({
     : 100;
 
   return (
-    <div className="w-full h-full bg-[#0f172a] relative rounded-xl overflow-hidden">
+    <div className="relative h-full w-full overflow-hidden rounded-xl bg-slate-900">
       <Canvas
         key={fileUrl} /* remount canvas on new file to avoid WebGL state leaks */
         shadows
@@ -148,7 +148,7 @@ export const StlViewer: React.FC<StlViewerProps> = ({
         </GizmoHelper>
       </Canvas>
 
-      <div className="absolute bottom-3 left-3 text-white/30 text-[10px] pointer-events-none select-none">
+      <div className="pointer-events-none absolute bottom-3 left-3 select-none rounded-md bg-white px-2 py-1 text-xs text-slate-600 shadow-sm">
         🖱️ Drag · Scroll to zoom · Right-drag to pan
       </div>
     </div>

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../services/supabase';
-import { ArrowLeft, Calendar, Tag, User, Layers, Share2, ExternalLink, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Calendar, Tag, User, Layers, ExternalLink, X, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const ProjectDetails: React.FC = () => {
@@ -25,7 +25,7 @@ const ProjectDetails: React.FC = () => {
           .select('*')
           .eq('id', id)
           .single();
-        
+
         if (data) {
           setProject({
             ...data,
@@ -38,12 +38,16 @@ const ProjectDetails: React.FC = () => {
     fetchProject();
   }, [id]);
 
-  if (loading) return <div className="min-h-screen bg-white flex items-center justify-center"><div className="w-10 h-10 border-4 border-brand-500 border-t-transparent rounded-full animate-spin"></div></div>;
-  
+  if (loading) return (
+    <div className="flex min-h-screen items-center justify-center bg-white pt-16" role="status">
+      <Loader2 className="h-8 w-8 animate-spin text-brand-600" aria-hidden="true" /><span className="sr-only">Loading</span>
+    </div>
+  );
+
   if (!project) return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-        <h2 className="text-2xl font-bold text-slate-900 mb-4">Project Not Found</h2>
-        <button onClick={() => navigate('/projects')} className="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors">Back to Projects</button>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 pt-16 text-center">
+        <h2 className="mb-4 font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Project Not Found</h2>
+        <button onClick={() => navigate('/projects')} className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700">Back to Projects</button>
     </div>
   );
 
@@ -52,81 +56,74 @@ const ProjectDetails: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white font-sans">
-      {/* Immersive Hero Header */}
-      <div className="relative h-[60vh] md:h-[70vh] w-full overflow-hidden">
-        <div className="absolute inset-0">
-            {hasHeroVideo ? (
-                <video src={project.video} autoPlay loop muted playsInline className="w-full h-full object-cover" />
-            ) : heroImage ? (
-                <img src={heroImage} alt={project.title} className="w-full h-full object-cover" />
-            ) : (
-                <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-                    <Layers className="w-20 h-20 text-slate-200" />
-                </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent"></div>
-        </div>
-        
-        <div className="absolute top-0 left-0 w-full p-6 z-20 pt-24">
-            <button onClick={() => navigate('/projects')} className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-bold hover:bg-white/20 transition-colors border border-white/10">
-                <ArrowLeft className="w-4 h-4" /> All Projects
+      {/* Page header */}
+      <section className="border-b border-slate-200 bg-white pt-24 pb-10 md:pt-28 md:pb-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <button onClick={() => navigate('/projects')} className="inline-flex items-center gap-1 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700 hover:underline underline-offset-4">
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" /> All Projects
             </button>
-        </div>
-
-        <div className="absolute bottom-0 left-0 w-full p-6 md:p-16 max-w-7xl mx-auto z-10">
-            <div className="animate-slide-up">
-                <span className="inline-block px-3 py-1 mb-4 rounded-full bg-brand-600 text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-brand-900/20">
+            <div className="mt-6">
+                <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700 ring-1 ring-inset ring-brand-600/20">
                     {project.category}
                 </span>
-                <h1 className="text-4xl md:text-7xl font-display font-bold text-white mb-6 leading-tight max-w-4xl drop-shadow-xl">{project.title}</h1>
-                
-                <div className="flex flex-wrap items-center gap-6 text-slate-300 text-sm md:text-base font-medium">
-                    <div className="flex items-center gap-2"><User className="w-5 h-5 text-brand-400" /> {project.author}</div>
-                    <div className="flex items-center gap-2"><Calendar className="w-5 h-5 text-brand-400" /> {project.date}</div>
-                </div>
+            </div>
+            <h1 className="mt-2 max-w-4xl font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900">{project.title}</h1>
+
+            <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-600 sm:text-base">
+                <div className="flex items-center gap-2"><User className="h-5 w-5 text-brand-500" aria-hidden="true" /> {project.author}</div>
+                <div className="flex items-center gap-2"><Calendar className="h-5 w-5 text-brand-500" aria-hidden="true" /> {project.date}</div>
             </div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-24">
-              
+      <section className="bg-slate-50 py-12 md:py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
+
               {/* Main Content */}
-              <div className="lg:w-2/3 space-y-12">
+              <div className="space-y-12 lg:w-2/3">
+                  <div className="aspect-[16/9] overflow-hidden rounded-2xl bg-slate-100">
+                      {hasHeroVideo ? (
+                          <video src={project.video} autoPlay loop muted playsInline className="h-full w-full object-cover" />
+                      ) : heroImage ? (
+                          <img src={heroImage} alt={project.title} className="h-full w-full object-cover" />
+                      ) : (
+                          <div className="flex h-full w-full items-center justify-center">
+                              <Layers className="h-16 w-16 text-slate-300" aria-hidden="true" />
+                          </div>
+                      )}
+                  </div>
+
                   <section>
-                      <h2 className="text-2xl md:text-3xl font-display font-bold text-slate-900 mb-6 font-display uppercase tracking-tighter">Project by {project.author}</h2>
-                      <div className="prose prose-lg text-slate-600 leading-relaxed">
-                          <p className="text-xl font-light text-slate-800 mb-6">{project.long_description || project.description}</p>
-                      </div>
+                      <h2 className="font-display text-xl font-semibold text-slate-900">Project by {project.author}</h2>
+                      <p className="mt-4 text-base sm:text-lg leading-relaxed text-slate-600">{project.long_description || project.description}</p>
                   </section>
 
                   {project.gallery && project.gallery.length > 0 && (
                       <section>
-                          <h2 className="text-2xl md:text-3xl font-display font-bold text-slate-900 mb-6 font-display uppercase tracking-tighter">Project Gallery Highlights</h2>
-                          <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-6">
+                          <h2 className="mb-6 font-display text-xl font-semibold text-slate-900">Project Gallery Highlights</h2>
+                          <div className="grid grid-cols-2 gap-3 md:gap-6">
                               {project.gallery.map((url, idx) => {
                                   const isVideo = isMediaVideo(url);
                                   return (
-                                    <motion.div 
-                                      key={idx} 
-                                      whileHover={{ scale: 1.02, y: -5 }}
-                                      className={`relative group rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-zoom-in bg-slate-100 ${idx === 0 ? 'col-span-2 h-[200px] md:h-[400px]' : 'h-[120px] md:h-[250px]'}`}
+                                    <div
+                                      key={idx}
+                                      className={`group relative cursor-zoom-in overflow-hidden rounded-xl bg-slate-100 shadow-sm transition-shadow hover:shadow-md ${idx === 0 ? 'col-span-2 h-[200px] md:h-[400px]' : 'h-[120px] md:h-[250px]'}`}
                                       onClick={() => setActiveImageIdx(idx)}
                                     >
                                         {isVideo ? (
-                                          <div className="w-full h-full relative">
-                                            <video src={url} className="w-full h-full object-cover" />
-                                            <div className="absolute inset-0 bg-black/20 flex items-center justify-center group-hover:bg-black/40 transition-colors">
-                                              <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 text-white">
-                                                <ChevronRight className="w-6 h-6 fill-current" />
+                                          <div className="relative h-full w-full">
+                                            <video src={url} className="h-full w-full object-cover" />
+                                            <div className="absolute inset-0 flex items-center justify-center bg-slate-950/30">
+                                              <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-900 shadow-sm">
+                                                <ChevronRight className="h-6 w-6" aria-hidden="true" />
                                               </div>
                                             </div>
                                           </div>
                                         ) : (
-                                          <img src={url} alt={`Gallery ${idx}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                                          <img src={url} alt={`Gallery ${idx}`} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
                                         )}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    </motion.div>
+                                    </div>
                                   );
                               })}
                           </div>
@@ -136,28 +133,29 @@ const ProjectDetails: React.FC = () => {
 
               {/* Sidebar Info */}
               <div className="lg:w-1/3">
-                  <div className="bg-slate-50 border border-slate-200 rounded-[2rem] p-8 sticky top-24 shadow-sm">
-                      <h3 className="text-lg font-black text-slate-900 mb-6 flex items-center gap-2 uppercase tracking-tighter">
-                          <Layers className="w-5 h-5 text-brand-600" /> Tech Stack
+                  <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm lg:sticky lg:top-24">
+                      <h3 className="mb-4 flex items-center gap-2 font-display text-xl font-semibold text-slate-900">
+                          <Layers className="h-5 w-5 text-brand-500" aria-hidden="true" /> Tech Stack
                       </h3>
-                      
-                      <div className="flex flex-wrap gap-2 mb-8">
+
+                      <div className="mb-6 flex flex-wrap gap-2">
                           {project.technologies?.map(tech => (
-                              <span key={tech} className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-700 flex items-center gap-1.5 shadow-sm">
-                                  <Tag className="w-3 h-3 text-brand-500" /> {tech}
+                              <span key={tech} className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700 ring-1 ring-inset ring-slate-600/10">
+                                  <Tag className="h-3 w-3 text-brand-500" aria-hidden="true" /> {tech}
                               </span>
                           ))}
                       </div>
 
-                      <div className="space-y-4 pt-6 border-t border-slate-200">
-                          <button className="w-full py-4 bg-brand-600 text-white rounded-xl font-bold hover:bg-brand-700 transition-all flex items-center justify-center gap-2 shadow-lg shadow-brand-500/20 active:scale-95">
-                              Contact Author <ExternalLink className="w-4 h-4" />
+                      <div className="border-t border-slate-200 pt-6">
+                          <button className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50">
+                              Contact Author <ExternalLink className="h-4 w-4" aria-hidden="true" />
                           </button>
                       </div>
                   </div>
               </div>
           </div>
       </div>
+      </section>
 
       {/* Modern Lightbox Modal */}
       <AnimatePresence>
@@ -166,52 +164,56 @@ const ProjectDetails: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-10"
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/90 p-4 md:p-10"
             onClick={(e) => { if(e.target === e.currentTarget) setActiveImageIdx(null); }}
           >
-            <button 
+            <button
               onClick={() => setActiveImageIdx(null)}
-              className="absolute top-6 right-6 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors z-[110]"
+              aria-label="Close"
+              className="absolute top-4 right-4 z-[110] inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-inset ring-white/25 transition-colors hover:bg-white/20"
             >
-              <X className="w-6 h-6" />
+              <X className="h-5 w-5" />
             </button>
 
             {project.gallery.length > 1 && (
               <>
-                <button 
+                <button
                   onClick={() => setActiveImageIdx((activeImageIdx - 1 + project.gallery.length) % project.gallery.length)}
-                  className="absolute left-6 p-4 text-white hover:text-brand-400 transition-colors z-[110]"
+                  aria-label="Previous media"
+                  className="absolute left-4 top-1/2 z-[110] inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-inset ring-white/25 transition-colors hover:bg-white/20"
                 >
-                  <ChevronLeft className="w-10 h-10" />
+                  <ChevronLeft className="h-5 w-5" />
                 </button>
-                <button 
+                <button
                   onClick={() => setActiveImageIdx((activeImageIdx + 1) % project.gallery.length)}
-                  className="absolute right-6 p-4 text-white hover:text-brand-400 transition-colors z-[110]"
+                  aria-label="Next media"
+                  className="absolute right-4 top-1/2 z-[110] inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white ring-1 ring-inset ring-white/25 transition-colors hover:bg-white/20"
                 >
-                  <ChevronRight className="w-10 h-10" />
+                  <ChevronRight className="h-5 w-5" />
                 </button>
               </>
             )}
 
             <motion.div
               layoutId={`gallery-${activeImageIdx}`}
-              className="relative w-full h-full max-w-5xl max-h-[85vh] flex items-center justify-center"
+              className="relative flex h-full max-h-[85vh] w-full max-w-5xl items-center justify-center"
             >
               {isMediaVideo(project.gallery[activeImageIdx]) ? (
-                <video 
-                  src={project.gallery[activeImageIdx]} 
-                  controls 
-                  autoPlay 
-                  className="max-w-full max-h-full rounded-xl shadow-2xl" 
+                <video
+                  src={project.gallery[activeImageIdx]}
+                  controls
+                  autoPlay
+                  className="max-h-full max-w-full rounded-xl shadow-xl"
                 />
               ) : (
-                <img 
-                  src={project.gallery[activeImageIdx]} 
-                  alt="Full View" 
-                  className="max-w-full max-h-full object-contain rounded-xl shadow-2xl"
+                <img
+                  src={project.gallery[activeImageIdx]}
+                  alt="Full View"
+                  className="max-h-full max-w-full rounded-xl object-contain shadow-xl"
                 />
               )}
-              <div className="absolute -bottom-12 left-0 w-full text-center text-white/50 text-xs font-bold uppercase tracking-widest">
+              <div className="absolute -bottom-12 left-0 w-full text-center text-xs font-medium text-white/80">
                 Media {activeImageIdx + 1} of {project.gallery.length}
               </div>
             </motion.div>

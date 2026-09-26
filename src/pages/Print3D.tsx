@@ -4,12 +4,9 @@ import {
   Upload,
   Printer,
   Settings,
-  Palette,
-  Layers,
   CheckCircle,
   Loader2,
   ChevronRight,
-  Info,
   Trash2,
   Weight,
   Box,
@@ -19,7 +16,7 @@ import { User } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { authService } from "../services/api";
 import { supabase } from "../services/supabase";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { StlViewer } from "../components/StlViewer";
 import { STLLoader } from "three-stdlib";
 import * as THREE from "three";
@@ -337,30 +334,27 @@ const Print3D: React.FC<Print3DProps> = ({ user }) => {
 
   if (orderId) {
     return (
-      <div className="min-h-screen bg-slate-50 pt-28 px-4 flex items-center justify-center">
-         <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="max-w-md w-full bg-white rounded-3xl p-10 text-center shadow-2xl border border-green-100"
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 pt-16">
+         <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm"
          >
-            <motion.div 
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", delay: 0.2 }}
-            >
-              <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
-            </motion.div>
-            <h2 className="text-3xl font-display font-black text-slate-900 mb-2">Order Confirmed!</h2>
-            <p className="text-slate-500 mb-6 font-medium">Your 3D print request has been sent to the lab.</p>
-            
-            <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 mb-8">
-               <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">Order Tracking ID</p>
-               <p className="font-mono text-xl font-bold text-brand-600">{orderId}</p>
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-50 text-green-600">
+              <CheckCircle className="h-6 w-6" aria-hidden="true" />
+            </div>
+            <h2 className="font-display text-2xl font-bold tracking-tight text-slate-900">Order Confirmed!</h2>
+            <p className="mt-2 text-sm text-slate-600">Your 3D print request has been sent to the lab.</p>
+
+            <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50 p-4">
+               <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Order Tracking ID</p>
+               <p className="mt-1 font-mono text-lg font-semibold text-brand-600">{orderId}</p>
             </div>
 
             <button
                onClick={() => navigate("/dashboard")}
-               className="w-full bg-slate-900 hover:bg-brand-600 text-white py-4 rounded-xl font-bold transition-colors shadow-lg"
+               className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
                Go to Dashboard
             </button>
@@ -370,88 +364,84 @@ const Print3D: React.FC<Print3DProps> = ({ user }) => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-28 pb-20 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        
-        <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-display font-black text-slate-900 flex items-center gap-3">
-             <Printer className="w-8 h-8 text-brand-600" />
+    <div className="min-h-screen bg-slate-50 pt-16">
+      <section className="bg-slate-50 py-8 md:py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h1 className="flex items-center gap-3 font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
+             <Printer className="h-7 w-7 shrink-0 text-brand-500" aria-hidden="true" />
              Online 3D Printing Service
           </h1>
-          <p className="text-slate-500 font-medium mt-2">Upload your STL model, configure print settings, and get an instant quote.</p>
+          <p className="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600">Upload your STL model, configure print settings, and get an instant quote.</p>
         </div>
+      </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+      <div className="mx-auto max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-12 lg:gap-8">
+
           {/* LEFT COLUMN: Viewer & Principal Display (7/12) */}
           <div className="lg:col-span-7 space-y-6">
-             
+
              {/* 3D Viewer Box */}
-             <div className="bg-white rounded-[2.5rem] p-4 md:p-6 shadow-2xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-brand-50 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none opacity-50 transition-opacity group-hover:opacity-100" />
-                
+             <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:p-6">
                 {error && (
-                   <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-2xl text-sm font-bold border border-red-100 flex items-center gap-3">
-                      <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                   <div role="alert" className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
                       {error}
                    </div>
                 )}
-                <div className="relative h-[480px] bg-slate-950 rounded-[2rem] overflow-hidden border border-slate-100 shadow-inner group transition-all duration-500">
-                   
+                <div className="relative h-[480px] overflow-hidden rounded-xl bg-slate-50">
+
                    {fileUrl && !uploading ? (
                       <>
                         <StlViewer fileUrl={fileUrl} color={color?.hex || "#CCCCCC"} rawSizeMm={analysis?.rawSize} scale={scale/100} />
-                        <button 
+                        <button
                            onClick={clearModel}
-                           className="absolute top-6 right-6 z-20 bg-white/10 hover:bg-red-500 hover:text-white backdrop-blur-xl p-3 rounded-2xl text-white/60 shadow-2xl border border-white/10 transition-all hover:scale-110 active:scale-95"
+                           className="absolute top-4 right-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white text-slate-500 shadow-sm ring-1 ring-slate-200 transition-colors hover:bg-red-50 hover:text-red-600"
                            title="Remove Model"
+                           aria-label="Remove Model"
                         >
-                           <Trash2 className="w-5 h-5" />
+                           <Trash2 className="h-5 w-5" aria-hidden="true" />
                         </button>
                       </>
                    ) : uploading ? (
-                      <div className="flex flex-col items-center justify-center h-full text-brand-600 bg-slate-900">
-                         <Loader2 className="w-16 h-16 animate-spin mb-6 opacity-80" />
-                         <span className="font-black text-xs uppercase tracking-[0.3em] animate-pulse">Synchronizing Pixels</span>
+                      <div role="status" className="flex h-full flex-col items-center justify-center gap-3 rounded-xl border border-slate-200">
+                         <Loader2 className="h-8 w-8 animate-spin text-brand-600" aria-hidden="true" />
+                         <span className="text-sm font-medium text-slate-600">Synchronizing Pixels</span>
                       </div>
                    ) : (
-                      <div className="text-center p-8 relative z-10 w-full h-full flex flex-col items-center justify-center bg-slate-900 group-hover:bg-slate-800 transition-colors duration-700">
-                         <div className="w-24 h-24 bg-brand-500/10 rounded-[2.5rem] flex items-center justify-center mb-8 border border-white/5 group-hover:scale-110 transition-transform duration-500">
-                             <Upload className="w-10 h-10 text-brand-500 group-hover:animate-bounce" />
+                      <div className="flex h-full w-full flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-10 text-center transition-colors hover:border-brand-500 hover:bg-brand-50/50">
+                         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-brand-600">
+                             <Upload className="h-6 w-6" aria-hidden="true" />
                          </div>
-                         <h3 className="text-2xl font-black text-white mb-2 tracking-tight">Prime the Printer</h3>
-                         <p className="text-white/40 font-bold text-xs uppercase tracking-widest mb-10">Upload your STL blueprint to begin.</p>
-                         
-                         <label className="relative group/btn cursor-pointer">
-                           <div className="absolute -inset-1 bg-gradient-to-r from-brand-600 to-indigo-600 rounded-2xl blur opacity-25 group-hover/btn:opacity-60 transition duration-1000 group-hover/btn:duration-200"></div>
-                           <div className="relative px-8 py-4 bg-white text-slate-900 rounded-2xl font-black text-xs uppercase tracking-widest ring-1 ring-white/10 group-hover/btn:scale-105 transition-all active:scale-95">
-                              Select STL File
-                           </div>
-                           <input 
+                         <h3 className="font-display text-xl font-semibold text-slate-900">Prime the Printer</h3>
+                         <p className="mt-1 text-sm text-slate-500">Upload your STL blueprint to begin.</p>
+
+                         <label className="mt-6 inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 focus-within:ring-2 focus-within:ring-brand-500 focus-within:ring-offset-2">
+                           Select STL File
+                           <input
                              ref={fileInputRef}
-                             type="file" 
-                             accept=".stl" 
+                             type="file"
+                             accept=".stl"
                              onChange={handleFileUpload}
-                             className="hidden"
+                             className="sr-only"
                            />
                          </label>
                       </div>
                    )}
                 </div>
 
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
                    {[
-                     { label: "Net Weight", val: analysis ? `${metrics.weight}g` : "-", icon: Weight, color: "text-brand-600 bg-brand-50" },
-                     { label: "Boundaries", val: analysis ? metrics.dimensions : "-", icon: Box, color: "text-blue-600 bg-blue-50" },
-                     { label: "Execution Time", val: analysis ? metrics.time : "-", icon: Clock, color: "text-purple-600 bg-purple-50" }
+                     { label: "Net Weight", val: analysis ? `${metrics.weight}g` : "-", icon: Weight },
+                     { label: "Boundaries", val: analysis ? metrics.dimensions : "-", icon: Box },
+                     { label: "Execution Time", val: analysis ? metrics.time : "-", icon: Clock }
                    ].map(i => (
-                     <div key={i.label} className="bg-slate-50/50 rounded-3xl p-5 border border-slate-100/50 flex flex-col gap-3 group/stat hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 transition-all duration-500">
-                        <div className={`w-10 h-10 rounded-2xl ${i.color} flex items-center justify-center transition-transform group-hover/stat:rotate-12`}>
-                           <i.icon className="w-5 h-5" />
+                     <div key={i.label} className="flex flex-col gap-3 rounded-lg bg-slate-50 p-4">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+                           <i.icon className="h-5 w-5" aria-hidden="true" />
                         </div>
                         <div>
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{i.label}</p>
-                          <p className="text-lg font-black text-slate-900 tracking-tight">{i.val}</p>
+                          <p className="text-sm text-slate-500">{i.label}</p>
+                          <p className="mt-1 font-display text-lg font-semibold tabular-nums text-slate-900">{i.val}</p>
                         </div>
                      </div>
                    ))}
@@ -461,40 +451,40 @@ const Print3D: React.FC<Print3DProps> = ({ user }) => {
 
           {/* RIGHT COLUMN: Configuration Menu (5/12) - Sticky */}
           <div className="lg:col-span-5 lg:sticky lg:top-24 space-y-6">
-             <div className="bg-white rounded-[2.5rem] p-8 shadow-2xl shadow-slate-300/30 border border-slate-100 overflow-hidden relative">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-50 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none" />
-                
-                <h2 className="text-2xl font-black text-slate-900 mb-8 tracking-tight relative z-10">Forge Parameter Setup</h2>
-                
-                <div className="space-y-8 relative z-10">
+             <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+                <h2 className="mb-6 font-display text-xl font-semibold text-slate-900">Forge Parameter Setup</h2>
+
+                <div className="space-y-6">
                   {/* Step 2: Scaling & Infill */}
-                  <div className="grid grid-cols-2 gap-6">
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Master Scale</label>
-                      <div className="relative group">
-                        <input 
+                      <label htmlFor="print3d-scale" className="mb-1.5 block text-sm font-medium text-slate-700">Master Scale</label>
+                      <div className="relative">
+                        <input
+                          id="print3d-scale"
                           type="number"
                           value={scale}
                           onChange={(e) => setScale(Math.max(1, Math.min(1000, parseInt(e.target.value) || 1)))}
-                          className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-black text-lg text-brand-600 focus:bg-white focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none transition-all"
+                          className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 pr-9 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                         />
-                        <span className="absolute right-5 top-1/2 -translate-y-1/2 font-black text-slate-300 pointer-events-none">%</span>
+                        <span className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-500" aria-hidden="true">%</span>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Inner Bone (Infill)</label>
-                      <div className="relative group">
-                        <select 
+                      <label htmlFor="print3d-infill" className="mb-1.5 block text-sm font-medium text-slate-700">Inner Bone (Infill)</label>
+                      <div className="relative">
+                        <select
+                          id="print3d-infill"
                           value={infill}
                           onChange={(e) => setInfill(parseInt(e.target.value))}
-                          className="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-2xl font-black text-lg text-slate-900 focus:bg-white focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 outline-none transition-all appearance-none"
+                          className="block w-full appearance-none rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 pr-9 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                         >
                           {[10, 20, 30, 50, 80, 100].map(v => (
                             <option key={v} value={v}>{v}%</option>
                           ))}
                         </select>
-                        <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none">
-                           <Settings className="w-4 h-4 text-slate-300" />
+                        <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2">
+                           <Settings className="h-4 w-4 text-slate-400" aria-hidden="true" />
                         </div>
                       </div>
                     </div>
@@ -502,13 +492,14 @@ const Print3D: React.FC<Print3DProps> = ({ user }) => {
 
                   {/* Step 3: Material Select */}
                   <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Alchemy Selection</label>
-                    <div className="grid grid-cols-3 gap-2 p-1.5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <p className="mb-1.5 block text-sm font-medium text-slate-700">Alchemy Selection</p>
+                    <div className="grid grid-cols-3 gap-2">
                       {materials.map(mat => (
                          <button
                             key={mat.id}
                             onClick={() => setMaterial(mat)}
-                            className={`py-3 px-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${material?.id === mat.id ? 'bg-white text-brand-600 shadow-xl shadow-black/5 ring-1 ring-slate-100' : 'text-slate-400 hover:text-slate-600 hover:bg-white/50'}`}
+                            aria-pressed={material?.id === mat.id}
+                            className={`rounded-lg border px-4 py-3 text-left text-sm transition-colors ${material?.id === mat.id ? 'border-brand-600 bg-brand-50 text-brand-700 ring-1 ring-brand-600' : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'}`}
                          >
                             {mat.name.split('-')[0]}
                          </button>
@@ -518,13 +509,15 @@ const Print3D: React.FC<Print3DProps> = ({ user }) => {
 
                   {/* Step 4: Color Palette */}
                   <div>
-                      <label className="block text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Visual Essence</label>
-                      <div className="flex flex-wrap gap-2.5">
+                      <p className="mb-1.5 block text-sm font-medium text-slate-700">Visual Essence</p>
+                      <div className="flex flex-wrap gap-2">
                          {material?.colors?.map((c: any) => (
-                            <button 
+                            <button
                               key={c.name}
                               onClick={() => setColor(c)}
-                              className={`w-12 h-12 rounded-2xl border-4 transition-all ${color?.name === c.name ? 'scale-110 border-brand-500 shadow-xl shadow-brand-500/20' : 'border-slate-50 hover:border-slate-200'}`}
+                              aria-label={c.name}
+                              aria-pressed={color?.name === c.name}
+                              className={`h-10 w-10 rounded-lg border-2 transition-colors ${color?.name === c.name ? 'border-white ring-2 ring-brand-600' : 'border-slate-200 hover:border-slate-300'}`}
                               style={{ background: c.hex }}
                               title={c.name}
                             />
@@ -534,36 +527,34 @@ const Print3D: React.FC<Print3DProps> = ({ user }) => {
                 </div>
 
                 {/* Pricing & Proceed - Sticky at bottom of card */}
-                <div className="mt-12 pt-8 border-t border-slate-50">
-                    <div className="flex items-center justify-between mb-8">
+                <div className="mt-8 border-t border-slate-200 pt-6">
+                    <div className="mb-6 flex items-center justify-between gap-4">
                        <div>
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Final Transaction</p>
-                          <div className="flex items-baseline gap-2">
-                             <span className="text-5xl font-black text-slate-900 tracking-tighter">₹{metrics.cost}</span>
-                             <span className="text-xs font-black text-slate-300">INR</span>
+                          <p className="text-sm text-slate-500">Final Transaction</p>
+                          <div className="mt-1 flex items-baseline gap-2">
+                             <span className="font-display text-3xl font-bold tracking-tight tabular-nums text-slate-900">₹{metrics.cost}</span>
+                             <span className="text-xs font-medium text-slate-500">INR</span>
                           </div>
                        </div>
                        <div className="text-right">
-                          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Status</p>
-                          <p className="text-emerald-500 font-black text-xs uppercase tracking-tighter inline-flex items-center gap-1.5">
-                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Ready to Print
+                          <p className="text-sm text-slate-500">Status</p>
+                          <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-0.5 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+                             <span className="h-1.5 w-1.5 rounded-full bg-green-500" aria-hidden="true" /> Ready to Print
                           </p>
                        </div>
                     </div>
-                    
-                    <button 
+
+                    <button
                       onClick={submitOrder}
                       disabled={!fileUrl || processing || uploading || !material}
-                      className="group relative w-full overflow-hidden"
+                      aria-busy={processing}
+                      className="group inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      <div className="absolute -inset-1 bg-gradient-to-r from-brand-600 to-indigo-600 rounded-[2rem] blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
-                      <div className="relative w-full py-6 bg-slate-900 text-white font-black text-xs uppercase tracking-[0.3em] rounded-[1.5rem] flex items-center justify-center gap-3 transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed shadow-2xl">
-                        {processing ? <Loader2 className="w-5 h-5 animate-spin" /> : (
+                        {processing ? <Loader2 className="h-5 w-5 animate-spin" /> : (
                           <>
-                            Generate Order <ChevronRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                            Generate Order <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                           </>
                         )}
-                      </div>
                     </button>
                 </div>
 

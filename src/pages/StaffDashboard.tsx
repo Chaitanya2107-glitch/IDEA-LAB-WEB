@@ -922,17 +922,10 @@ const StaffDashboard: React.FC<StaffDashboardProps> = ({ staff: initialStaff }) 
     : printOrders.filter(o => o.status === statusFilter);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
-      {/* ── Mobile Top Header ── */}
-      <header className="md:hidden sticky top-0 bg-white/80 backdrop-blur-xl border-b border-slate-100 z-50 px-6 py-4 flex items-center justify-center">
-        <Link to="/">
-          <img src="/img/logo_orange_new.png" alt="REVA IDEA Lab" className="h-10 w-auto object-contain" />
-        </Link>
-      </header>
-
+    <div className="min-h-screen bg-slate-50 pt-16 flex flex-col md:flex-row">
       {/* ══ SIDEBAR ══ */}
       <aside className="hidden md:flex w-64 shrink-0">
-        <div className="sticky top-0 h-screen bg-white border-r border-slate-100 flex flex-col px-4 pt-6 pb-6 shadow-[10px_0_30px_rgba(0,0,0,0.02)]">
+        <div className="sticky top-16 h-[calc(100vh-4rem)] bg-white border-r border-slate-100 flex flex-col px-4 pt-6 pb-6 shadow-[10px_0_30px_rgba(0,0,0,0.02)]">
 
           {/* Logo */}
           <div className="px-2 mb-6">

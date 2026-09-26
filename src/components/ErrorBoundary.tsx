@@ -27,37 +27,37 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-white rounded-[2.5rem] shadow-xl border border-slate-100 p-10 text-center">
-            <div className="w-20 h-20 bg-red-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-red-500">
-              <AlertTriangle className="w-10 h-10" />
+        <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
+          <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-8 text-center shadow-sm">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-600">
+              <AlertTriangle className="h-6 w-6" aria-hidden="true" />
             </div>
             
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight mb-4">Well, this is awkward.</h1>
-            <p className="text-slate-500 font-bold mb-8 leading-relaxed">
+            <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900">Well, this is awkward.</h1>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
               Something went wrong while rendering this page. Our team has been notified.
             </p>
 
-            <div className="space-y-3">
+            <div className="mt-6 space-y-3">
               <button
                 onClick={() => window.location.reload()}
-                className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-[13px] hover:bg-black transition flex items-center justify-center gap-3 shadow-lg shadow-slate-900/20"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700"
               >
-                <RefreshCw className="w-4 h-4" /> Reload Page
+                <RefreshCw className="h-4 w-4" aria-hidden="true" /> Reload Page
               </button>
               
               <button
                 onClick={() => window.location.href = '/'}
-                className="w-full py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl font-black uppercase tracking-widest text-[13px] hover:bg-slate-50 transition flex items-center justify-center gap-3"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900"
               >
-                <Home className="w-4 h-4" /> Go to Homepage
+                <Home className="h-4 w-4" aria-hidden="true" /> Go to Homepage
               </button>
             </div>
 
             {process.env.NODE_ENV === 'development' && (
-              <div className="mt-8 pt-8 border-t border-slate-50 text-left">
-                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2">Error Details</p>
-                <code className="text-[10px] text-red-400 font-mono break-all">{this.state.error?.toString()}</code>
+              <div className="mt-6 border-t border-slate-200 pt-6 text-left">
+                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Error Details</p>
+                <code className="mt-2 block break-all font-mono text-xs text-red-600">{this.state.error?.toString()}</code>
               </div>
             )}
           </div>

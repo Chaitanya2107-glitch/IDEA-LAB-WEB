@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Quote, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 // Assuming testimonials remain static for now
 const TESTIMONIALS = [ // Assuming testimonials remain static for now
   {
@@ -48,26 +48,23 @@ const TESTIMONIALS = [ // Assuming testimonials remain static for now
 ];
 
 const TestimonialCard: React.FC<{ t: any, isMobile?: boolean }> = ({ t, isMobile }) => (
-    <div className={`bg-white p-8 rounded-3xl border border-gray-100 group transition-all duration-300 h-full flex flex-col justify-between ${
-        isMobile 
-        ? 'shadow-lg border-brand-100 min-w-[300px] w-[85vw] snap-center mr-4 bg-gradient-to-br from-white to-gray-50' 
-        : 'shadow-sm hover:shadow-xl hover:-translate-y-1'
+    <div className={`group flex h-full flex-col justify-between rounded-xl border border-slate-200 bg-white p-6 shadow-sm ${
+        isMobile
+        ? 'min-w-[300px] w-[85vw] snap-center mr-4'
+        : 'transition-shadow hover:shadow-md hover:border-slate-300'
     }`}>
         <div>
-            <div className="flex justify-between items-start mb-6">
-                <Quote className="w-10 h-10 text-brand-100 fill-brand-50" />
-                <div className="flex gap-1 text-yellow-400">
-                    {[1,2,3,4,5].map(s => <Star key={s} className="w-4 h-4 fill-current" />)}
-                </div>
+            <div className="mb-4 flex gap-1 text-brand-500" aria-hidden="true">
+                {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 fill-current" />)}
             </div>
-            <p className="text-slate-700 leading-relaxed mb-8 italic text-lg font-medium">"{t.text}"</p>
+            <p className="mb-6 text-base leading-relaxed text-slate-600">"{t.text}"</p>
         </div>
-        
-        <div className="flex items-center gap-4 border-t border-gray-100 pt-6">
-            <img src={t.image} alt={t.author} className="w-14 h-14 rounded-full object-cover ring-4 ring-gray-50 group-hover:ring-brand-50 transition-all" />
+
+        <div className="flex items-center gap-4 border-t border-slate-200 pt-6">
+            <img src={t.image} alt={t.author} className="h-12 w-12 rounded-full object-cover ring-1 ring-slate-200" />
             <div>
-                <h4 className="font-bold text-slate-900 text-base group-hover:text-brand-600 transition-colors">{t.author}</h4>
-                <p className="text-xs text-slate-500 uppercase tracking-wide font-bold">{t.role}</p>
+                <h4 className="text-base font-semibold text-slate-900">{t.author}</h4>
+                <p className="text-sm text-slate-500">{t.role}</p>
             </div>
         </div>
     </div>
@@ -75,37 +72,36 @@ const TestimonialCard: React.FC<{ t: any, isMobile?: boolean }> = ({ t, isMobile
 
 const Testimonials: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      
+    <div className="min-h-screen bg-white">
+
       {/* Header */}
-      <div className="bg-slate-900 py-20 px-4 text-center text-white relative overflow-hidden bg-noise">
-         <div className="absolute inset-0 bg-gradient-to-b from-brand-900/50 to-slate-900 opacity-90"></div>
-         <div className="relative z-10 max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-display font-bold mb-6">Success Stories</h1>
-            <p className="text-xl text-slate-300 leading-relaxed">
+      <section className="border-b border-slate-200 bg-white pt-24 pb-10 md:pt-28 md:pb-12">
+         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900">Success Stories</h1>
+            <p className="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600">
               Discover how the IDEA Lab is transforming education and innovation at REVA University.
             </p>
          </div>
-      </div>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-4 py-16">
-         
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+
          {/* MOBILE VIEW: Horizontal Scrolling Snap List */}
          <div className="md:hidden">
-             <div className="flex overflow-x-auto pb-8 snap-x snap-mandatory no-scrollbar -mx-4 px-4">
+             <div className="flex overflow-x-auto pb-4 snap-x snap-mandatory no-scrollbar -mx-4 px-4 sm:-mx-6 sm:px-6">
                 {TESTIMONIALS.map(t => (
                    <TestimonialCard key={t.id} t={t} isMobile={true} />
                 ))}
                 {/* Spacer for right padding */}
                 <div className="min-w-[1px] h-1"></div>
              </div>
-             <div className="text-center text-slate-400 text-xs font-bold uppercase tracking-widest mt-2">
+             <div className="mt-2 text-center text-xs font-medium uppercase tracking-wider text-slate-500">
                  Swipe to see more
              </div>
          </div>
 
          {/* DESKTOP VIEW: Grid Layout */}
-         <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-8">
+         <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6">
             {TESTIMONIALS.map(t => (
                <TestimonialCard key={t.id} t={t} isMobile={false} />
             ))}

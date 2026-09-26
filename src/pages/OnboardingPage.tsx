@@ -37,31 +37,33 @@ const Select: React.FC<{
   options: string[];
   placeholder?: string;
 }> = ({ label, value, onChange, options, placeholder = "Select an option" }) => (
-  <div className="space-y-2">
-    <label className="block text-sm font-semibold text-white/70 tracking-wide">{label}</label>
-    <div className="relative">
-      <select
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        className="w-full appearance-none bg-white/10 border border-white/20 text-white rounded-2xl px-5 py-4 text-base font-medium focus:outline-none focus:ring-2 focus:ring-white/40 focus:bg-white/20 transition-all cursor-pointer"
-      >
-        <option value="" disabled className="bg-slate-800 text-slate-300">{placeholder}</option>
-        {options.map(o => (
-          <option key={o} value={o} className="bg-slate-800 text-white">{o}</option>
-        ))}
-      </select>
-      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50 pointer-events-none" />
-    </div>
+  <div>
+    <label className="mb-1.5 block text-sm font-medium text-slate-700">
+      {label}
+      <span className="relative mt-1.5 block">
+        <select
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          className="block w-full cursor-pointer appearance-none rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 pr-10 text-sm font-normal text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
+        >
+          <option value="" disabled>{placeholder}</option>
+          {options.map(o => (
+            <option key={o} value={o}>{o}</option>
+          ))}
+        </select>
+        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+      </span>
+    </label>
   </div>
 );
 
 /* ── Step progress bar ── */
 const ProgressBar: React.FC<{ step: number; total: number }> = ({ step, total }) => (
-  <div className="flex gap-2 mb-10">
+  <div className="mb-8 flex gap-2" aria-hidden="true">
     {Array.from({ length: total }).map((_, i) => (
-      <div key={i} className="h-1 flex-1 rounded-full overflow-hidden bg-white/20">
+      <div key={i} className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200">
         <motion.div
-          className="h-full bg-white rounded-full"
+          className="h-full rounded-full bg-brand-500"
           initial={{ width: 0 }}
           animate={{ width: i < step ? "100%" : i === step - 1 ? "100%" : "0%" }}
           transition={{ duration: 0.4, ease: "easeOut" }}
@@ -125,23 +127,23 @@ const OnboardingPage: React.FC<OnboardingPageProps> = ({ user, onComplete }) => 
   const firstName = user.name?.split(" ")[0] || "there";
 
   return (
-    <div className="min-h-screen bg-white flex overflow-hidden">
-      {/* --- Left Column: Onboarding Form --- */}
-      <div className="flex-1 flex flex-col justify-center px-8 lg:px-24 py-12">
-        <div className="max-w-[480px] w-full mx-auto">
+    <div className="min-h-screen bg-slate-50 pt-16">
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12 sm:px-6">
+        <div className="w-full max-w-md">
           {/* Header */}
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-10 text-center lg:text-left"
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="mb-8 text-center"
           >
-            <span className="text-xs font-black text-brand-600 uppercase tracking-[0.3em] mb-3 block">Step {step} of {totalSteps}</span>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight mb-3">
+            <span className="block text-xs sm:text-sm font-semibold uppercase tracking-wider text-brand-600">Step {step} of {totalSteps}</span>
+            <h1 className="mt-2 font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
               {step === 1 && `Welcome, ${firstName}`}
               {step === 2 && "Specialization"}
               {step === 3 && "Semester Status"}
             </h1>
-            <p className="text-slate-500 font-bold">
+            <p className="mt-2 text-sm text-slate-600">
               {step === 1 && "Start by identifying your academic path."}
               {step === 2 && `Choose your specific major in ${degree}.`}
               {step === 3 && "Help us personalize your dashboard schedule."}
@@ -149,7 +151,7 @@ const OnboardingPage: React.FC<OnboardingPageProps> = ({ user, onComplete }) => 
           </motion.div>
 
           {/* Form Area */}
-          <div className="bg-slate-50 border border-slate-100 rounded-3xl p-8 shadow-sm">
+          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
             <ProgressBar step={step} total={totalSteps} />
 
             <AnimatePresence mode="wait" initial={false}>
@@ -194,29 +196,29 @@ const OnboardingPage: React.FC<OnboardingPageProps> = ({ user, onComplete }) => 
               </motion.div>
             </AnimatePresence>
 
-            <div className="flex items-center gap-3 mt-10">
+            <div className="mt-8 flex items-center gap-3">
               {step > 1 && (
                 <button
                   onClick={() => setStep(s => s - 1)}
-                  className="p-4 rounded-2xl border border-slate-200 text-slate-400 hover:bg-white hover:text-slate-900 transition"
+                  aria-label="Back"
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-slate-300 bg-white text-slate-600 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900"
                 >
-                  <ArrowLeft className="w-5 h-5" />
+                  <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                 </button>
               )}
-              <motion.button
-                whileTap={{ scale: 0.98 }}
+              <button
                 onClick={handleNext}
                 disabled={!valid() || saving}
-                className="flex-1 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase tracking-widest text-[13px] hover:bg-black transition shadow-xl shadow-slate-900/20 flex items-center justify-center gap-3 disabled:opacity-30"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {saving ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin" />
                 ) : step < totalSteps ? (
-                  <>Next Step <ChevronRight className="w-4 h-4" /></>
+                  <>Next Step <ChevronRight className="h-4 w-4" aria-hidden="true" /></>
                 ) : (
-                  <><CheckCircle className="w-4 h-4" /> Finalize Profile</>
+                  <><CheckCircle className="h-4 w-4" aria-hidden="true" /> Finalize Profile</>
                 )}
-              </motion.button>
+              </button>
             </div>
 
             <button
@@ -224,25 +226,12 @@ const OnboardingPage: React.FC<OnboardingPageProps> = ({ user, onComplete }) => 
                 onComplete({ ...user, isProfileComplete: true });
                 navigate("/dashboard", { replace: true });
               }}
-              className="w-full text-center mt-6 text-xs font-black uppercase tracking-widest text-slate-300 hover:text-brand-600 transition"
+              className="mt-4 w-full py-2 text-center text-sm font-medium text-slate-500 transition-colors hover:text-brand-600"
             >
               Skip setup for now
             </button>
           </div>
         </div>
-      </div>
-
-      {/* --- Right Column: Image --- */}
-      <div className="hidden lg:block flex-1 bg-slate-950 relative overflow-hidden">
-        <motion.img 
-          initial={{ scale: 1.1, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          src="file:///C:/Users/FRIDAY/.gemini/antigravity/brain/9cf919c2-1a5f-4608-b614-b049e3a0a050/login_side_panel_image_1773395654800.png"
-          className="absolute inset-0 w-full h-full object-cover"
-          alt="Innovation Background"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/40" />
       </div>
     </div>
   );

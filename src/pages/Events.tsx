@@ -3,8 +3,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Calendar as CalendarIcon, List, ChevronLeft, ChevronRight,
-  CheckCircle, Lock, Clock, MapPin, Users, Zap, Filter,
-  X, Loader2, Tag, Info, AlertCircle, ArrowRight, Image as ImageIcon
+  CheckCircle, Lock, Clock, MapPin,
+  X, Loader2, AlertCircle, ArrowRight, Image as ImageIcon
 } from "lucide-react";
 import { User } from "../../types";
 import { authService } from "../services/api";
@@ -19,14 +19,6 @@ interface EventsProps { user?: User; }
 /* ─── Indian national holidays (centralized in utils/labClosure.ts) ─── */
 const FIXED_SUNDAYS_CLOSED = true;
 
-const EVENT_TYPE_COLOR: Record<string, string> = {
-  workshop:   "bg-brand-50 text-brand-700 border-brand-200",
-  masterclass:"bg-purple-50 text-purple-700 border-purple-200",
-  showcase:   "bg-blue-50 text-blue-700 border-blue-200",
-  hackathon:  "bg-green-50 text-green-700 border-green-200",
-  seminar:    "bg-yellow-50 text-yellow-700 border-yellow-200",
-};
-
 const MONTH_NAMES = ["January","February","March","April","May","June",
   "July","August","September","October","November","December"];
 const DAY_NAMES = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
@@ -38,7 +30,6 @@ const EventCard: React.FC<{ event: any; onRegister?: (e: any) => void }> = ({ ev
   const day = d.getDate();
   const month = MONTH_NAMES[d.getMonth()].slice(0, 3).toUpperCase();
   const eventType = event.type || event.event_type || 'workshop';
-  const colorCls = EVENT_TYPE_COLOR[eventType] ?? "bg-slate-50 text-slate-700 border-slate-200";
   const spotsLeft = event.max_attendees - (event.registered_count ?? 0);
   const bannerUrl = event.banner_image || event.banner_url;
   const computedStatus = getComputedEventStatus(event);
@@ -48,77 +39,76 @@ const EventCard: React.FC<{ event: any; onRegister?: (e: any) => void }> = ({ ev
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileHover={{ y: isCompleted ? 0 : -8 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       onClick={() => navigate(`/events/${event.id}`)}
-      className={`bg-white border border-slate-100 rounded-[32px] shadow-sm transition-all overflow-hidden flex flex-col group cursor-pointer ${isCompleted ? 'opacity-80 grayscale-[30%]' : 'hover:shadow-2xl hover:shadow-brand-900/10'}`}
+      className="group flex cursor-pointer flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md hover:border-slate-300"
     >
-      <div className="relative h-48 overflow-hidden">
+      <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
         {bannerUrl ? (
-          <img src={bannerUrl} alt={event.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+          <img src={bannerUrl} alt={event.title} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
         ) : (
-          <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300">
-            <CalendarIcon className="w-12 h-12" />
+          <div className="flex h-full w-full items-center justify-center text-slate-400">
+            <CalendarIcon className="h-10 w-10" aria-hidden="true" />
           </div>
         )}
-        {isCompleted && <div className="absolute inset-0 bg-slate-900/30" />}
-        <div className="absolute top-4 left-4 flex gap-2">
-          <span className={`inline-block text-[10px] font-black uppercase px-3 py-1 rounded-full border shadow-sm backdrop-blur-md ${colorCls} border-white/20`}>
+        <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+          <span className="rounded-full bg-white px-2.5 py-0.5 text-xs font-medium capitalize text-slate-700 shadow-sm">
             {eventType}
           </span>
-          <span className={`inline-block text-[10px] font-black uppercase px-3 py-1 rounded-full border shadow-sm backdrop-blur-md border-white/20 ${statusStyle.cls}`}>
-            {computedStatus === 'ongoing' && <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse inline-block mr-1" />}
+          <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset shadow-sm ${statusStyle.cls}`}>
+            {computedStatus === 'ongoing' && <span className="h-1.5 w-1.5 rounded-full bg-brand-500" aria-hidden="true" />}
             {statusStyle.label}
           </span>
         </div>
         {isCompleted && highlightCount > 0 && (
-          <div className="absolute bottom-3 right-3 flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full text-white text-[10px] font-black">
-            <ImageIcon className="w-3 h-3" /> {highlightCount} highlights
+          <div className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-0.5 text-xs font-medium text-slate-700 shadow-sm">
+            <ImageIcon className="h-3.5 w-3.5 text-slate-500" aria-hidden="true" /> {highlightCount} highlights
           </div>
         )}
       </div>
 
-      <div className="p-8 flex-1 flex flex-col">
-        <div className="flex items-start gap-4 mb-6">
-          <div className="shrink-0 w-12 flex flex-col items-center bg-brand-50 rounded-2xl py-2 shadow-sm border border-brand-100/50">
-            <span className="text-[9px] font-black text-brand-500 tracking-widest">{month}</span>
-            <span className="text-xl font-black text-brand-700 leading-none">{day}</span>
+      <div className="flex flex-1 flex-col p-5">
+        <div className="mb-4 flex items-start gap-4">
+          <div className="flex w-12 shrink-0 flex-col items-center rounded-lg bg-brand-50 py-2">
+            <span className="text-xs font-semibold text-brand-700">{month}</span>
+            <span className="font-display text-xl font-bold leading-none text-brand-700">{day}</span>
           </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="font-black text-slate-900 text-lg mb-1 leading-tight group-hover:text-brand-600 transition-colors uppercase tracking-tight">{event.title}</h3>
-            <div className="flex items-center gap-3 text-[10px] font-black text-slate-400">
-              <span className="flex items-center gap-1 uppercase tracking-wider"><Clock className="w-3 h-3" /> {event.start_time?.slice(0,5)}</span>
-              <span className="flex items-center gap-1 uppercase tracking-wider truncate"><MapPin className="w-3 h-3" /> {event.location}</span>
+          <div className="min-w-0 flex-1">
+            <h3 className="font-display text-lg font-semibold leading-snug text-slate-900 transition-colors group-hover:text-brand-600">{event.title}</h3>
+            <div className="mt-1 flex items-center gap-3 text-sm text-slate-500">
+              <span className="flex shrink-0 items-center gap-1"><Clock className="h-4 w-4 text-slate-400" aria-hidden="true" /> {event.start_time?.slice(0,5)}</span>
+              <span className="flex min-w-0 items-center gap-1"><MapPin className="h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" /><span className="truncate">{event.location}</span></span>
             </div>
           </div>
         </div>
 
-        <p className="text-sm font-bold text-slate-500 line-clamp-2 mb-6 leading-relaxed flex-1 italic">
+        <p className="mb-5 line-clamp-2 flex-1 text-sm leading-relaxed text-slate-600">
           "{event.description}"
         </p>
 
-        <div className="flex items-center justify-between mt-auto pt-6 border-t border-slate-50">
+        <div className="mt-auto flex items-center justify-between gap-3 border-t border-slate-200 pt-4">
           {isCompleted ? (
-            <span className="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-1.5"><Lock className="w-3 h-3" /> Registration Closed</span>
+            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500"><Lock className="h-4 w-4" aria-hidden="true" /> Registration Closed</span>
           ) : (
             <div className="flex flex-col">
-              <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none mb-1">Availability</span>
-              <span className={`text-xs font-black uppercase tracking-wider ${spotsLeft <= 5 ? "text-red-500" : "text-brand-500"}`}>
+              <span className="text-xs text-slate-500">Availability</span>
+              <span className={`text-sm font-semibold ${spotsLeft <= 5 ? "text-red-600" : "text-brand-600"}`}>
                 {spotsLeft > 0 ? `${spotsLeft} spots left` : "SOLD OUT"}
               </span>
             </div>
           )}
-          
+
           {isCompleted ? (
             <button onClick={(e) => { e.stopPropagation(); navigate(`/events/${event.id}`); }}
-              className="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-200 transition flex items-center gap-2">
-              View Recap <ArrowRight className="w-3 h-3" />
+              className="group/btn inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900">
+              View Recap <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5" aria-hidden="true" />
             </button>
           ) : spotsLeft > 0 ? (
             <button onClick={(e) => { e.stopPropagation(); onRegister?.(event); }}
-              className="px-6 py-3 bg-brand-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-brand-700 transition shadow-xl shadow-brand-600/20 active:scale-95 flex items-center gap-2">
-              Register Now <ArrowRight className="w-3 h-3" />
+              className="group/btn inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700">
+              Register Now <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5" aria-hidden="true" />
             </button>
           ) : null}
         </div>
@@ -179,11 +169,11 @@ const Events: React.FC<EventsProps> = ({ user }) => {
 
       setEvents(evData ?? []);
       setBlockedDateObjs(blDatesRes ?? []);
- 
+
       const closureMap = new Map<string, string>();
       (clRes.data ?? []).forEach((c: any) => closureMap.set(c.date, c.reason));
       setClosures(closureMap);
- 
+
       const bookMap = new Map<string, any[]>();
       (bkRes.data ?? []).forEach((b: any) => {
         const arr = bookMap.get(b.date) ?? [];
@@ -225,10 +215,10 @@ const Events: React.FC<EventsProps> = ({ user }) => {
   const handleDayClick = (dateStr: string) => {
     const s = dayStatus(dateStr);
     if (s === "past") return; // Block past date modals
-    
+
     // Get closure reason from centralized logic for consistency
     const status = getLabStatus(dateStr, blockedDateObjs);
-    
+
     setSelectedDate(dateStr);
     setSelectedDateInfo({
       status: s,
@@ -241,10 +231,10 @@ const Events: React.FC<EventsProps> = ({ user }) => {
   /* ─── Day cell colors ─── */
   const cellCls = (dateStr: string, isToday: boolean) => {
     const s = dayStatus(dateStr);
-    if (s === "past") return "opacity-20 pointer-events-none grayscale";
-    if (s === "closed") return "bg-red-50 text-red-300 cursor-default ring-0";
+    if (s === "past") return "pointer-events-none bg-slate-50 text-slate-400";
+    if (s === "closed") return "bg-red-50 text-red-700 cursor-default";
     if (s === "busy")   return "bg-amber-50 text-amber-700 hover:bg-amber-100 cursor-pointer";
-    if (isToday) return "bg-brand-600 text-white hover:bg-brand-700 cursor-pointer ring-2 ring-brand-300";
+    if (isToday) return "bg-brand-600 text-white hover:bg-brand-700 cursor-pointer";
     return "bg-white text-slate-700 hover:bg-brand-50 cursor-pointer hover:text-brand-700";
   };
 
@@ -252,44 +242,41 @@ const Events: React.FC<EventsProps> = ({ user }) => {
   const filteredEvents = typeFilter === "all" ? events : events.filter(e => (e.type || e.event_type) === typeFilter);
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-20">
+    <div className="min-h-screen bg-white">
       {/* ── Header ── */}
-      <div className="bg-slate-900 py-14 px-4 mb-10 relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-72 h-72 bg-brand-600/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-56 h-56 bg-purple-600/15 rounded-full blur-3xl" />
+      <section className="border-b border-slate-200 bg-white pt-24 pb-10 md:pt-28 md:pb-12">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <p className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-brand-600">Events & Lab Booking</p>
+          <h1 className="mt-2 font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900">Events Happening RIGHT NOW!</h1>
+          <p className="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-slate-600">Book lab slots, register for workshops, and see what's happening at  IDEA Lab.</p>
         </div>
-        <div className="max-w-5xl mx-auto relative z-10">
-          <span className="inline-block px-3 py-1 bg-white/10 border border-white/20 rounded-full text-brand-300 text-xs font-bold uppercase tracking-widest mb-4">Events & Lab Booking</span>
-          <h1 className="text-4xl md:text-5xl font-display font-black text-white mb-3">Events Happening RIGHT NOW!</h1>
-          <p className="text-white/50 max-w-xl">Book lab slots, register for workshops, and see what's happening at  IDEA Lab.</p>
-        </div>
-      </div>
+      </section>
 
-      <div className="max-w-7xl mx-auto px-4">
+      <section className="bg-slate-50 py-10 md:py-12">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* ── Toggle ── */}
-        <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-          <div className="flex gap-1 bg-white border border-slate-100 p-1 rounded-2xl shadow-sm">
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <div className="inline-flex max-w-full overflow-x-auto rounded-lg bg-slate-100 p-1">
             {(["list", "calendar"] as const).map(v => (
-              <button key={v} onClick={() => setView(v)}
-                className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${view === v ? "bg-brand-600 text-white shadow" : "text-slate-500 hover:text-slate-800"}`}>
-                {v === "list" ? <><List className="w-3.5 h-3.5 inline mr-1.5" />Events</> : <><CalendarIcon className="w-3.5 h-3.5 inline mr-1.5" />Calendar</>}
+              <button key={v} onClick={() => setView(v)} aria-pressed={view === v}
+                className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${view === v ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900"}`}>
+                {v === "list" ? <><List className="h-4 w-4" aria-hidden="true" />Events</> : <><CalendarIcon className="h-4 w-4" aria-hidden="true" />Calendar</>}
               </button>
             ))}
             {user && (
-              <button onClick={() => setView('mybookings')}
-                className={`px-5 py-2 rounded-xl text-sm font-bold transition-all ${view === 'mybookings' ? "bg-brand-600 text-white shadow" : "text-slate-500 hover:text-slate-800"}`}>
+              <button onClick={() => setView('mybookings')} aria-pressed={view === 'mybookings'}
+                className={`whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${view === 'mybookings' ? "bg-white text-slate-900 shadow-sm" : "text-slate-600 hover:text-slate-900"}`}>
                 My Bookings
               </button>
             )}
           </div>
 
           {view === "list" && (
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex flex-wrap gap-2">
               {["all", "workshop", "masterclass", "showcase", "hackathon", "seminar"].map(t => (
-                <button key={t} onClick={() => setTypeFilter(t)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize transition border ${
-                    typeFilter === t ? "bg-brand-600 text-white border-brand-600" : "bg-white text-slate-500 border-slate-200 hover:border-brand-400"
+                <button key={t} onClick={() => setTypeFilter(t)} aria-pressed={typeFilter === t}
+                  className={`rounded-full border px-3 py-1 text-sm font-medium capitalize transition-colors ${
+                    typeFilter === t ? "border-brand-600 bg-brand-50 text-brand-700" : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
                   }`}>{t === "all" ? "All Events" : t}</button>
               ))}
             </div>
@@ -297,19 +284,21 @@ const Events: React.FC<EventsProps> = ({ user }) => {
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-32">
-            <Loader2 className="w-10 h-10 animate-spin text-brand-400" />
+          <div className="flex min-h-[40vh] items-center justify-center" role="status">
+            <Loader2 className="h-8 w-8 animate-spin text-brand-600" aria-hidden="true" /><span className="sr-only">Loading</span>
           </div>
         ) : view === "list" ? (
           /* ── EVENT LIST ── */
           <div>
             {filteredEvents.length === 0 ? (
-              <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-20 text-center">
-                <CalendarIcon className="w-10 h-10 text-slate-200 mx-auto mb-4" />
-                <p className="text-slate-400 font-bold">No upcoming events</p>
+              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                  <CalendarIcon className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <p className="text-base font-semibold text-slate-900">No upcoming events</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {filteredEvents.map(ev => (
                     <EventCard key={ev.id} event={ev} onRegister={(e) => navigate(`/events/${e.id}`)} />
                   ))}
@@ -319,47 +308,51 @@ const Events: React.FC<EventsProps> = ({ user }) => {
         ) : view === "mybookings" ? (
           /* ── MY BOOKINGS ── */
           <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-black text-slate-900">My Slot Bookings</h2>
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+              <h2 className="font-display text-xl font-semibold text-slate-900">My Slot Bookings</h2>
               <button onClick={() => { loadMyBookings(); setIsBookingModalOpen(true); }}
-                className="px-5 py-2.5 bg-brand-600 text-white rounded-xl font-black text-xs uppercase tracking-widest hover:bg-brand-700 transition shadow-sm flex items-center gap-2">
-                <CalendarIcon className="w-4 h-4" /> New Booking
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50">
+                <CalendarIcon className="h-4 w-4" aria-hidden="true" /> New Booking
               </button>
             </div>
             {loadingMyBookings ? (
-              <div className="flex justify-center py-20"><Loader2 className="w-8 h-8 animate-spin text-brand-400" /></div>
+              <div className="flex min-h-[40vh] items-center justify-center" role="status">
+                <Loader2 className="h-8 w-8 animate-spin text-brand-600" aria-hidden="true" /><span className="sr-only">Loading</span>
+              </div>
             ) : myBookings.length === 0 ? (
-              <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-20 text-center">
-                <CalendarIcon className="w-10 h-10 text-slate-200 mx-auto mb-4" />
-                <p className="text-slate-400 font-bold">No slot bookings yet</p>
-                <p className="text-slate-300 text-sm mt-1">Book a lab slot from the Calendar view</p>
+              <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                  <CalendarIcon className="h-6 w-6" aria-hidden="true" />
+                </div>
+                <p className="text-base font-semibold text-slate-900">No slot bookings yet</p>
+                <p className="mt-1 max-w-sm text-sm text-slate-500">Book a lab slot from the Calendar view</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {myBookings.map(b => {
                   const statusCls: Record<string,string> = {
-                    pending: 'bg-amber-50 text-amber-700 border-amber-200',
-                    approved: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-                    rejected: 'bg-red-50 text-red-700 border-red-200'
+                    pending: 'bg-amber-50 text-amber-700 ring-amber-600/20',
+                    approved: 'bg-blue-50 text-blue-700 ring-blue-600/20',
+                    rejected: 'bg-red-50 text-red-700 ring-red-600/20'
                   };
                   return (
-                    <div key={b.id} className="bg-white border border-slate-100 rounded-2xl p-5 shadow-sm flex flex-col sm:flex-row sm:items-center gap-4">
-                      <div className="w-12 h-12 bg-brand-50 rounded-xl flex items-center justify-center shrink-0 text-brand-600">
-                        <CalendarIcon className="w-6 h-6" />
+                    <div key={b.id} className="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:flex-row sm:items-center">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
+                        <CalendarIcon className="h-5 w-5" aria-hidden="true" />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase border ${statusCls[b.status] || statusCls.pending}`}>
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-1 flex flex-wrap items-center gap-2">
+                          <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ring-1 ring-inset ${statusCls[b.status] || statusCls.pending}`}>
                             {b.status}
                           </span>
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                          <span className="text-xs text-slate-500">
                             {new Date(b.date + 'T00:00:00').toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                           </span>
                         </div>
-                        <p className="font-bold text-slate-800">{(b.start_time||'').slice(0,5)} – {(b.end_time||'').slice(0,5)}</p>
-                        <p className="text-xs text-slate-400 mt-0.5 truncate">{b.purpose || 'No purpose stated'}</p>
+                        <p className="font-medium text-slate-900">{(b.start_time||'').slice(0,5)} – {(b.end_time||'').slice(0,5)}</p>
+                        <p className="mt-0.5 truncate text-sm text-slate-500">{b.purpose || 'No purpose stated'}</p>
                         {b.rejection_reason && (
-                          <p className="text-xs text-red-500 mt-1 italic">Reason: {b.rejection_reason}</p>
+                          <p className="mt-1 text-sm text-red-600">Reason: {b.rejection_reason}</p>
                         )}
                       </div>
                     </div>
@@ -370,40 +363,42 @@ const Events: React.FC<EventsProps> = ({ user }) => {
           </div>
         ) : (
           /* ── CALENDAR ── */
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
             {/* Month Nav */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-              <h2 className="text-lg font-black text-slate-800">
+            <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3 sm:px-6">
+              <h2 className="font-display text-xl font-semibold text-slate-900">
                 {MONTH_NAMES[currentMonth.getMonth()]} {currentMonth.getFullYear()}
               </h2>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
                 <button onClick={() => setCurrentMonth(new Date())}
-                  className="px-3 py-1 text-xs font-bold text-brand-600 border border-brand-200 rounded-full hover:bg-brand-50 transition">Today</button>
+                  className="mr-1 inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900">Today</button>
                 <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))}
-                  className="p-2 rounded-xl hover:bg-slate-100 transition"><ChevronLeft className="w-4 h-4" /></button>
+                  aria-label="Previous month"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"><ChevronLeft className="h-5 w-5" /></button>
                 <button onClick={() => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))}
-                  className="p-2 rounded-xl hover:bg-slate-100 transition"><ChevronRight className="w-4 h-4" /></button>
+                  aria-label="Next month"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"><ChevronRight className="h-5 w-5" /></button>
               </div>
             </div>
 
             {/* Legend */}
-            <div className="flex gap-4 px-6 py-2 bg-slate-50 border-b border-slate-100 flex-wrap text-xs font-semibold">
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-brand-600 inline-block" />Today</span>
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-amber-100 inline-block" />Busy</span>
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-red-100 inline-block" />Closed / Holiday</span>
-              <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded bg-white border inline-block" />Available</span>
+            <div className="flex flex-wrap gap-4 border-b border-slate-200 bg-slate-50 px-4 py-2 text-xs font-medium text-slate-600 sm:px-6">
+              <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded bg-brand-600" />Today</span>
+              <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded bg-amber-100" />Busy</span>
+              <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded bg-red-100" />Closed / Holiday</span>
+              <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded border border-slate-300 bg-white" />Available</span>
             </div>
 
             {/* Day headers */}
-            <div className="grid grid-cols-7 border-b border-slate-100">
+            <div className="grid grid-cols-7 border-b border-slate-200 bg-slate-50">
               {DAY_NAMES.map(d => (
-                <div key={d} className={`py-2 text-center text-xs font-black uppercase tracking-wider ${d === "Sun" ? "text-red-400" : "text-slate-400"}`}>{d}</div>
+                <div key={d} className={`py-2 text-center text-xs font-semibold uppercase tracking-wider ${d === "Sun" ? "text-red-600" : "text-slate-500"}`}>{d}</div>
               ))}
             </div>
 
             {/* Day cells */}
             <div className="grid grid-cols-7">
-              {Array.from({ length: firstDay }).map((_, i) => <div key={`pad-${i}`} className="min-h-[88px] border-b border-r border-slate-50" />)}
+              {Array.from({ length: firstDay }).map((_, i) => <div key={`pad-${i}`} className="min-h-[88px] border-b border-r border-slate-100" />)}
               {Array.from({ length: daysInMonth }).map((_, i) => {
                 const day = i + 1;
                 const dateStr = formatDate(currentMonth.getFullYear(), currentMonth.getMonth(), day);
@@ -415,14 +410,14 @@ const Events: React.FC<EventsProps> = ({ user }) => {
 
                 return (
                   <div key={day} onClick={() => handleDayClick(dateStr)}
-                    className={`min-h-[88px] border-b border-r border-slate-50 p-2 transition relative ${cls}`}>
-                    <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-sm font-bold ${isToday ? "bg-white text-brand-700" : ""}`}>{day}</span>
-                    {status === "closed" && <Lock className="w-3 h-3 absolute top-2 right-2 opacity-40" />}
+                    className={`relative min-h-[88px] min-w-0 border-b border-r border-slate-100 p-1.5 transition-colors sm:p-2 ${cls}`}>
+                    <span className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-semibold ${isToday ? "bg-white text-brand-700" : ""}`}>{day}</span>
+                    {status === "closed" && <Lock className="absolute top-2 right-2 h-3 w-3 text-red-600" aria-hidden="true" />}
                     {evs.slice(0, 2).map(ev => (
-                      <div key={ev.id} className="mt-1 text-[9px] font-bold bg-brand-100 text-brand-700 px-1 py-0.5 rounded truncate">{ev.title}</div>
+                      <div key={ev.id} className="mt-1 truncate rounded bg-brand-100 px-1 py-0.5 text-xs font-medium text-brand-700">{ev.title}</div>
                     ))}
                     {bks.length > 0 && status !== "closed" && (
-                      <div className="mt-1 text-[9px] font-bold text-amber-600">{bks.length} booking{bks.length > 1 ? "s" : ""}</div>
+                      <div className="mt-1 truncate text-xs font-medium text-amber-700">{bks.length} booking{bks.length > 1 ? "s" : ""}</div>
                     )}
                   </div>
                 );
@@ -433,66 +428,70 @@ const Events: React.FC<EventsProps> = ({ user }) => {
 
         {/* ── Booking CTA banner for guests ── */}
         {!user && (
-          <div className="mt-10 bg-gradient-to-r from-brand-600 to-brand-700 rounded-2xl p-6 text-white flex items-center justify-between flex-wrap gap-4">
+          <div className="mt-10 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-brand-100 bg-brand-50 p-6">
             <div>
-              <p className="font-black text-lg">Want to book a lab slot?</p>
-              <p className="text-white/70 text-sm">Log in to reserve time and register for events.</p>
+              <p className="font-display text-lg font-semibold text-slate-900">Want to book a lab slot?</p>
+              <p className="mt-1 text-sm text-slate-600">Log in to reserve time and register for events.</p>
             </div>
-            <button onClick={() => navigate("/login")} className="px-6 py-2.5 bg-white text-brand-700 font-black rounded-xl hover:bg-brand-50 transition">
+            <button onClick={() => navigate("/login")} className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50">
               Login / Sign Up
             </button>
           </div>
         )}
       </div>
+      </section>
 
       {/* ── Date Detail Modal ── */}
       <AnimatePresence>
         {selectedDate && selectedDateInfo && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center justify-center p-4"
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/50 p-4 sm:items-center"
             onClick={() => setSelectedDate(null)}>
-            <motion.div initial={{ y: 80, scale: 0.96 }} animate={{ y: 0, scale: 1 }} exit={{ y: 80, scale: 0.96 }}
-              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
               onClick={e => e.stopPropagation()}
-              className="bg-white rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+              role="dialog" aria-modal="true" aria-labelledby="date-detail-title"
+              className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-xl ring-1 ring-slate-200">
               {/* Modal header */}
-              <div className="flex items-center justify-between p-5 border-b border-slate-100 sticky top-0 bg-white rounded-t-3xl z-10">
+              <div className="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
                 <div>
-                  <p className="text-xs text-slate-400 font-bold uppercase">{new Date(selectedDate).toLocaleDateString("en-IN", { weekday: "long" })}</p>
-                  <h3 className="font-black text-slate-800 text-lg">{new Date(selectedDate).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</h3>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{new Date(selectedDate).toLocaleDateString("en-IN", { weekday: "long" })}</p>
+                  <h3 id="date-detail-title" className="font-display text-xl font-semibold text-slate-900">{new Date(selectedDate).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}</h3>
                 </div>
-                <button onClick={() => setSelectedDate(null)} className="p-2 hover:bg-slate-100 rounded-full transition"><X className="w-5 h-5" /></button>
+                <button onClick={() => setSelectedDate(null)} aria-label="Close"
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"><X className="h-5 w-5" /></button>
               </div>
 
-              <div className="p-5 space-y-5">
+              <div className="space-y-5 px-6 py-5">
                 {/* Status banner */}
                 {selectedDateInfo.status === "closed" ? (
-                  <div className="bg-red-50 border border-red-200 rounded-2xl p-4 flex items-start gap-3">
-                    <Lock className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
+                  <div className="flex items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                    <Lock className="mt-0.5 h-5 w-5 shrink-0 text-red-600" aria-hidden="true" />
                     <div>
-                      <p className="font-bold text-red-700">Lab Closed</p>
-                      <p className="text-sm text-red-500">{selectedDateInfo.closureReason}</p>
+                      <p className="font-semibold">Lab Closed</p>
+                      <p className="text-red-700">{selectedDateInfo.closureReason}</p>
                     </div>
                   </div>
                 ) : selectedDateInfo.status === "busy" ? (
-                  <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3 flex items-center gap-2 text-amber-700 text-sm font-bold">
-                    <AlertCircle className="w-4 h-4" /> High demand — only limited slots available
+                  <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+                    <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" /> High demand — only limited slots available
                   </div>
                 ) : (
-                  <div className="bg-green-50 border border-green-200 rounded-2xl p-3 flex items-center gap-2 text-green-700 text-sm font-bold">
-                    <CheckCircle className="w-4 h-4" /> Available for booking
+                  <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800">
+                    <CheckCircle className="h-4 w-4 shrink-0" aria-hidden="true" /> Available for booking
                   </div>
                 )}
 
                 {/* Events on this day */}
                 {selectedDateInfo.events.length > 0 && (
                   <div>
-                    <p className="text-xs font-black text-slate-400 uppercase mb-2">Events</p>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500">Events</p>
                     <div className="space-y-2">
                       {selectedDateInfo.events.map((ev: any) => (
-                        <div key={ev.id} className="bg-brand-50 border border-brand-100 rounded-xl p-3">
-                          <p className="font-bold text-brand-800 text-sm">{ev.title}</p>
-                          <p className="text-xs text-brand-500 mt-0.5">{ev.start_time?.slice(0,5)}–{ev.end_time?.slice(0,5)} · {ev.location}</p>
+                        <div key={ev.id} className="rounded-lg border border-brand-100 bg-brand-50 p-3">
+                          <p className="text-sm font-semibold text-slate-900">{ev.title}</p>
+                          <p className="mt-0.5 text-xs text-slate-600">{ev.start_time?.slice(0,5)}–{ev.end_time?.slice(0,5)} · {ev.location}</p>
                         </div>
                       ))}
                     </div>
@@ -501,34 +500,34 @@ const Events: React.FC<EventsProps> = ({ user }) => {
 
                 {/* Booking Section */}
                 {selectedDateInfo.status !== "closed" && selectedDate && (
-                  <div className="pt-4 border-t border-slate-50">
+                  <div className="border-t border-slate-200 pt-4">
                     {user ? (
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-4">
                           <div>
-                            <h4 className="font-black text-slate-800 uppercase tracking-tight">Need the Lab?</h4>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Reserve your workstation</p>
+                            <h4 className="text-base font-semibold text-slate-900">Need the Lab?</h4>
+                            <p className="mt-0.5 text-sm text-slate-500">Reserve your workstation</p>
                           </div>
                           <div className="flex flex-col items-end">
-                            <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-none mb-1">Status</span>
-                            <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${selectedDateInfo.status === 'busy' ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-emerald-50 text-emerald-600 border-emerald-200'}`}>
+                            <span className="mb-1 text-xs text-slate-500">Status</span>
+                            <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ring-1 ring-inset ${selectedDateInfo.status === 'busy' ? 'bg-amber-50 text-amber-700 ring-amber-600/20' : 'bg-green-50 text-green-700 ring-green-600/20'}`}>
                               {selectedDateInfo.status === "busy" ? "Limited Slots" : "Available"}
                             </span>
                           </div>
                         </div>
 
-                        <button 
+                        <button
                           onClick={() => setIsBookingModalOpen(true)}
-                          className="w-full py-4 bg-slate-900 hover:bg-brand-600 text-white rounded-[20px] font-black text-sm uppercase tracking-widest transition-all shadow-xl shadow-slate-900/10 active:scale-[0.98] flex items-center justify-center gap-2"
+                          className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                          <CalendarIcon className="w-4 h-4" />
+                          <CalendarIcon className="h-5 w-5" aria-hidden="true" />
                           <span>Book Date</span>
                         </button>
                       </div>
                     ) : (
-                      <div className="p-6 bg-slate-50 border border-slate-100 rounded-[28px] text-center space-y-3">
-                        <p className="text-xs font-black text-slate-400 uppercase tracking-widest italic">Login required to book slots</p>
-                        <button onClick={() => navigate("/login")} className="px-6 py-2 bg-white border border-slate-200 text-slate-900 rounded-xl text-[10px] font-black uppercase tracking-widest hover:border-brand-500 transition shadow-sm">Sign In / Register</button>
+                      <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-6 text-center">
+                        <p className="text-sm text-slate-600">Login required to book slots</p>
+                        <button onClick={() => navigate("/login")} className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900">Sign In / Register</button>
                       </div>
                     )}
                   </div>
@@ -539,7 +538,7 @@ const Events: React.FC<EventsProps> = ({ user }) => {
         )}
       </AnimatePresence>
 
-      <SlotBookingModal 
+      <SlotBookingModal
         isOpen={isBookingModalOpen}
         onClose={() => setIsBookingModalOpen(false)}
         user={user}

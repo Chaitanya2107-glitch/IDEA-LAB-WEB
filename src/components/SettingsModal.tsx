@@ -92,57 +92,57 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, user, on
   const isUniversity = user.type === 'university';
 
   return (
-    <div className="fixed inset-0 z-40 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="relative bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl animate-slide-up flex flex-col max-h-[90vh]">
-        
+    <div className="fixed inset-0 z-50 flex items-end justify-center p-4 sm:items-center">
+      <div className="absolute inset-0 bg-slate-900/50" onClick={onClose}></div>
+      <div role="dialog" aria-modal="true" className="relative flex w-full max-w-2xl max-h-[90vh] flex-col overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-200 animate-slide-up">
+
         {/* Header */}
-        <div className="bg-slate-900 text-white p-6 flex justify-between items-center shrink-0">
+        <div className="flex shrink-0 items-center justify-between border-b border-slate-200 px-6 py-4">
           <div>
-             <h2 className="text-xl font-display font-bold">Settings</h2>
-             <p className="text-xs text-slate-400 mt-1">Manage your account and preferences</p>
+             <h2 className="font-display text-xl font-semibold text-slate-900">Settings</h2>
+             <p className="mt-1 text-sm text-slate-500">Manage your account and preferences</p>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/20 rounded-full transition-colors">
-            <X className="w-5 h-5" />
+          <button onClick={onClose} aria-label="Close" className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900">
+            <X className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
 
         <div className="flex flex-col md:flex-row flex-grow overflow-hidden">
           {/* Sidebar */}
-          <div className="md:w-1/3 bg-gray-50 border-b md:border-b-0 md:border-r border-gray-100 p-2 md:p-4 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible shrink-0">
+          <div className="flex shrink-0 flex-row gap-1 overflow-x-auto border-b border-slate-200 bg-white p-2 md:w-1/3 md:flex-col md:overflow-visible md:border-b-0 md:border-r md:p-4">
             <button 
               onClick={() => setActiveTab('profile')}
-              className={`flex-1 md:w-full flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-colors font-medium text-sm whitespace-nowrap ${
-                activeTab === 'profile' ? 'bg-white shadow-sm text-brand-600 ring-1 ring-brand-100' : 'text-slate-600 hover:bg-gray-100'
+              className={`flex flex-1 items-center justify-center gap-3 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-colors md:w-full md:flex-none md:justify-start ${
+                activeTab === 'profile' ? 'bg-brand-50 text-brand-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
-              <User className="w-4 h-4" />
+              <User className="h-4 w-4" aria-hidden="true" />
               <span>Profile</span>
             </button>
             <button 
               onClick={() => setActiveTab('security')}
-              className={`flex-1 md:w-full flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-colors font-medium text-sm whitespace-nowrap ${
-                activeTab === 'security' ? 'bg-white shadow-sm text-brand-600 ring-1 ring-brand-100' : 'text-slate-600 hover:bg-gray-100'
+              className={`flex flex-1 items-center justify-center gap-3 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-colors md:w-full md:flex-none md:justify-start ${
+                activeTab === 'security' ? 'bg-brand-50 text-brand-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
-              <ShieldCheck className="w-4 h-4" />
+              <ShieldCheck className="h-4 w-4" aria-hidden="true" />
               <span>Security</span>
             </button>
             <button 
               onClick={() => setActiveTab('preferences')}
-              className={`flex-1 md:w-full flex items-center justify-center md:justify-start space-x-3 px-4 py-3 rounded-xl transition-colors font-medium text-sm whitespace-nowrap ${
-                activeTab === 'preferences' ? 'bg-white shadow-sm text-brand-600 ring-1 ring-brand-100' : 'text-slate-600 hover:bg-gray-100'
+              className={`flex flex-1 items-center justify-center gap-3 whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition-colors md:w-full md:flex-none md:justify-start ${
+                activeTab === 'preferences' ? 'bg-brand-50 text-brand-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
-              <Bell className="w-4 h-4" />
+              <Bell className="h-4 w-4" aria-hidden="true" />
               <span>Preferences</span>
             </button>
-            <div className="hidden md:block pt-4 mt-4 border-t border-gray-200">
-               <button 
+            <div className="hidden md:block mt-4 border-t border-slate-200 pt-4">
+               <button
                 onClick={onLogout}
-                className="w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors font-medium text-sm text-red-600 hover:bg-red-50"
+                className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-700"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="h-4 w-4" aria-hidden="true" />
                 <span>Sign Out</span>
               </button>
             </div>
@@ -156,18 +156,18 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, user, on
               <div className="space-y-6">
                 <div className="flex flex-col items-center mb-6">
                    <div 
-                      className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-gray-100 shadow-md mb-3 group cursor-pointer"
+                      className="group relative mb-3 h-28 w-28 cursor-pointer overflow-hidden rounded-full ring-1 ring-slate-200"
                       onClick={() => fileInputRef.current?.click()}
                    >
-                     <img src={avatar} alt={name} className="w-full h-full object-cover" />
-                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Camera className="w-8 h-8 text-white" />
+                     <img src={avatar} alt={name} className="h-full w-full object-cover" />
+                     <div className="absolute inset-0 flex items-center justify-center bg-slate-900/50 opacity-0 transition-opacity group-hover:opacity-100">
+                        <Camera className="h-6 w-6 text-white" aria-hidden="true" />
                      </div>
                    </div>
                    <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
-                   <button 
+                   <button
                       onClick={() => fileInputRef.current?.click()}
-                      className="text-sm text-brand-600 font-bold hover:underline"
+                      className="inline-flex items-center gap-1 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700 hover:underline underline-offset-4"
                     >
                       Change Picture
                    </button>
@@ -176,39 +176,39 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, user, on
                 <div className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Full Name</label>
+                        <label className="mb-1.5 block text-sm font-medium text-slate-700">Full Name</label>
                         <input 
                           type="text" 
                           value={name} 
                           onChange={(e) => setName(e.target.value)}
-                          className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-brand-500 font-medium text-slate-900 text-sm" 
+                          className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500" 
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Unique ID</label>
-                        <input type="text" defaultValue={user.id} disabled className="w-full px-4 py-2 rounded-lg border border-gray-200 bg-gray-50 text-slate-500 cursor-not-allowed text-sm" />
+                        <label className="mb-1.5 block text-sm font-medium text-slate-700">Unique ID</label>
+                        <input type="text" defaultValue={user.id} disabled className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500" />
                       </div>
                   </div>
 
                   {isUniversity && (
-                      <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 space-y-3">
-                          <h4 className="font-bold text-blue-900 text-sm flex items-center gap-2"><GraduationCap className="w-4 h-4" /> Academic Details</h4>
+                      <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-5">
+                          <h4 className="flex items-center gap-2 text-sm font-semibold text-slate-900"><GraduationCap className="h-4 w-4 text-brand-500" aria-hidden="true" /> Academic Details</h4>
                           <div>
-                            <label className="block text-xs font-bold text-slate-500 uppercase mb-1">SRN / University ID</label>
+                            <label className="mb-1.5 block text-sm font-medium text-slate-700">SRN / University ID</label>
                             <input 
                                 type="text" 
                                 value={srn} 
                                 onChange={(e) => setSrn(e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" 
+                                className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500" 
                             />
                           </div>
                           <div className="grid grid-cols-2 gap-3">
                               <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Degree</label>
+                                <label className="mb-1.5 block text-sm font-medium text-slate-700">Degree</label>
                                 <select 
                                     value={degree}
                                     onChange={(e) => setDegree(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+                                    className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                                 >
                                     <option value="B.Tech Account">B.Tech</option>
                                     <option value="M.Tech Account">M.Tech</option>
@@ -217,12 +217,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, user, on
                                 </select>
                               </div>
                               <div>
-                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Program</label>
+                                <label className="mb-1.5 block text-sm font-medium text-slate-700">Program</label>
                                 <input 
                                     type="text" 
                                     value={program} 
                                     onChange={(e) => setProgram(e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" 
+                                    className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500" 
                                 />
                               </div>
                           </div>
@@ -230,35 +230,35 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, user, on
                   )}
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1 flex items-center gap-1"><AlignLeft className="w-3 h-3" /> Bio</label>
+                    <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-slate-700"><AlignLeft className="h-4 w-4 text-slate-400" aria-hidden="true" /> Bio</label>
                     <textarea 
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
                         placeholder="Tell us a bit about yourself..."
                         rows={3}
-                        className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-brand-500 text-sm"
+                        className="min-h-[120px] block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                     ></textarea>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1 flex items-center gap-1"><Zap className="w-3 h-3" /> Skills (Comma separated)</label>
+                    <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-slate-700"><Zap className="h-4 w-4 text-slate-400" aria-hidden="true" /> Skills (Comma separated)</label>
                     <input 
                       type="text" 
                       value={skills} 
                       onChange={(e) => setSkills(e.target.value)}
                       placeholder="e.g. IoT, 3D Printing, Python"
-                      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-brand-500 text-sm" 
+                      className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500" 
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1 flex items-center gap-1"><Linkedin className="w-3 h-3" /> LinkedIn Profile</label>
+                    <label className="mb-1.5 flex items-center gap-1.5 text-sm font-medium text-slate-700"><Linkedin className="h-4 w-4 text-slate-400" aria-hidden="true" /> LinkedIn Profile</label>
                     <input 
                       type="url" 
                       value={linkedin} 
                       onChange={(e) => setLinkedin(e.target.value)}
                       placeholder="https://linkedin.com/in/..."
-                      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-brand-500 text-sm" 
+                      className="block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500" 
                     />
                   </div>
                 </div>
@@ -270,15 +270,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, user, on
               <div className="space-y-6">
                  
                  {/* Email Linking */}
-                 <div className="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <h3 className="font-bold text-blue-900 flex items-center gap-2">
-                        <Mail className="w-4 h-4" /> Link Email Address
+                 <div className="rounded-xl border border-blue-200 bg-blue-50 p-5">
+                    <h3 className="flex items-center gap-2 font-semibold text-blue-900">
+                        <Mail className="h-4 w-4" aria-hidden="true" /> Link Email Address
                     </h3>
-                    <p className="text-xs text-blue-700 mb-4">Link your university email for recovery and notifications.</p>
+                    <p className="mt-1 mb-4 text-sm text-blue-800">Link your university email for recovery and notifications.</p>
                     
                     {emailLinked ? (
-                        <div className="flex items-center gap-2 text-green-600 bg-white px-3 py-2 rounded-lg border border-green-200 text-sm font-bold">
-                            <ShieldCheck className="w-4 h-4" /> Email Linked
+                        <div className="inline-flex items-center gap-2 rounded-lg border border-green-200 bg-white px-3 py-2 text-sm font-medium text-green-700">
+                            <ShieldCheck className="h-4 w-4" aria-hidden="true" /> Email Linked
                         </div>
                     ) : (
                         <div className="flex gap-2">
@@ -287,11 +287,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, user, on
                                 placeholder="name@reva.edu.in"
                                 value={linkEmailInput}
                                 onChange={(e) => setLinkEmailInput(e.target.value)}
-                                className="flex-grow px-3 py-2 rounded-lg border border-blue-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="min-w-0 flex-1 block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 shadow-sm transition-colors focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-500"
                             />
                             <button 
                                 onClick={() => setEmailLinked(true)}
-                                className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700"
+                                className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 Link
                             </button>
@@ -300,31 +300,31 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, user, on
                  </div>
 
                  {/* 2FA Toggle */}
-                 <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                    <div className="flex justify-between items-start">
+                 <div className="rounded-xl border border-slate-200 bg-white p-5">
+                    <div className="flex items-start justify-between gap-4">
                         <div>
-                            <h3 className="font-bold text-slate-900 flex items-center gap-2">
-                                <Smartphone className="w-4 h-4 text-brand-600" /> Two-Factor Authentication
+                            <h3 className="flex items-center gap-2 font-semibold text-slate-900">
+                                <Smartphone className="h-4 w-4 text-brand-500" aria-hidden="true" /> Two-Factor Authentication
                             </h3>
-                            <p className="text-xs text-slate-500 mt-1 max-w-[250px]">Secure your account with TOTP (Authenticator App).</p>
+                            <p className="mt-1 max-w-[250px] text-sm text-slate-500">Secure your account with TOTP (Authenticator App).</p>
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" checked={twoFactor} onChange={() => setTwoFactor(!twoFactor)} className="sr-only peer" />
-                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-600"></div>
+                        <label className="relative inline-flex shrink-0 cursor-pointer items-center">
+                            <input type="checkbox" checked={twoFactor} onChange={() => setTwoFactor(!twoFactor)} aria-label="Two-Factor Authentication" className="sr-only peer" />
+                            <div className="w-11 h-6 bg-slate-200 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500/40 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-600"></div>
                         </label>
                     </div>
                     {twoFactor && (
-                        <div className="mt-4 p-3 bg-white border border-gray-200 rounded-lg">
-                            <p className="text-xs text-slate-500 mb-2">Scan this QR code with Google Authenticator:</p>
-                            <div className="w-24 h-24 bg-gray-900 mx-auto rounded-lg flex items-center justify-center text-white text-[10px]">
+                        <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                            <p className="mb-2 text-xs text-slate-500">Scan this QR code with Google Authenticator:</p>
+                            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-white text-center text-xs text-slate-500">
                                 [QR CODE PLACEHOLDER]
                             </div>
                         </div>
                     )}
                  </div>
 
-                 <div className="border-t border-gray-100 pt-4">
-                    <p className="text-xs text-slate-400">Last login: {new Date().toLocaleDateString()} via Mobile App</p>
+                 <div className="border-t border-slate-200 pt-4">
+                    <p className="text-xs text-slate-500">Last login: {new Date().toLocaleDateString()} via Mobile App</p>
                  </div>
               </div>
             )}
@@ -333,7 +333,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, user, on
             {activeTab === 'preferences' && (
               <div className="space-y-6">
                  <div className="space-y-4">
-                    <h3 className="font-bold text-slate-900 border-b border-gray-100 pb-2">Notifications</h3>
+                    <h3 className="border-b border-slate-200 pb-2 font-semibold text-slate-900">Notifications</h3>
                     <label className="flex items-center justify-between cursor-pointer">
                        <span className="text-sm text-slate-700">Email Alerts for Returns</span>
                        <input type="checkbox" defaultChecked className="accent-brand-600 w-4 h-4" />
@@ -345,9 +345,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, user, on
                  </div>
 
                  <div className="space-y-4 pt-4">
-                    <h3 className="font-bold text-slate-900 border-b border-gray-100 pb-2">Appearance</h3>
+                    <h3 className="border-b border-slate-200 pb-2 font-semibold text-slate-900">Appearance</h3>
                     <label className="flex items-center justify-between cursor-pointer">
-                       <span className="text-sm text-slate-700 flex items-center gap-2"><Moon className="w-4 h-4" /> Dark Mode (Beta)</span>
+                       <span className="text-sm text-slate-700 flex items-center gap-2"><Moon className="h-4 w-4 text-slate-400" aria-hidden="true" /> Dark Mode (Beta)</span>
                        <input type="checkbox" className="accent-brand-600 w-4 h-4" />
                     </label>
                  </div>
@@ -356,20 +356,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, user, on
           </div>
         </div>
         
-        <div className="p-4 border-t border-gray-100 flex justify-between items-center bg-gray-50 shrink-0">
+        <div className="flex shrink-0 items-center justify-between border-t border-slate-200 bg-slate-50 px-6 py-4">
            <div className="md:hidden">
-              <button onClick={onLogout} className="text-red-500 text-xs font-bold flex items-center gap-1">
-                  <LogOut className="w-3 h-3" /> Sign Out
+              <button onClick={onLogout} className="inline-flex items-center gap-1 py-2 text-sm font-medium text-red-600 transition-colors hover:text-red-700">
+                  <LogOut className="h-4 w-4" aria-hidden="true" /> Sign Out
               </button>
            </div>
-           <div className="flex gap-2 ml-auto">
-               <button onClick={onClose} className="px-4 py-2 rounded-lg font-bold text-slate-500 hover:bg-gray-200 transition-colors text-sm">Cancel</button>
+           <div className="ml-auto flex gap-3">
+               <button onClick={onClose} className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-50">Cancel</button>
                <button 
                  onClick={handleSave} 
                  disabled={saving}
-                 className="px-6 py-2 rounded-lg font-bold bg-brand-600 text-white hover:bg-brand-700 shadow-md transition-colors flex items-center gap-2 disabled:opacity-70 text-sm"
+                 className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                >
-                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                 {saving ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Save className="h-4 w-4" aria-hidden="true" />}
                  Save
                </button>
            </div>

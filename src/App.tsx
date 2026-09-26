@@ -41,6 +41,7 @@ import { supabase } from "./services/supabase";
 import { auth, db } from "./services/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { Loader2 } from "lucide-react";
+import { MotionConfig } from "framer-motion";
 import { Analytics } from "@vercel/analytics/react";
 
 /* -------------------- Scroll Control -------------------- */
@@ -181,13 +182,15 @@ const NavbarWrapper = ({ user, staffUser, onLogout, onUpdateUser }: any) => {
   /* ---------------- Block UI until auth resolved ---------------- */
   if (!authReady) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <Loader2 className="w-10 h-10 animate-spin text-brand-600" />
+      <div className="flex min-h-screen items-center justify-center bg-white" role="status">
+        <Loader2 className="h-8 w-8 animate-spin text-brand-600" aria-hidden="true" />
+        <span className="sr-only">Loading</span>
       </div>
     );
   }
 
   return (
+    <MotionConfig reducedMotion="user">
     <Router>
       <ScrollToTop />
       <ProgressBar />
@@ -311,6 +314,7 @@ const NavbarWrapper = ({ user, staffUser, onLogout, onUpdateUser }: any) => {
         {!user && !staffUser && <FloatingLoginBtn />}
       </div>
     </Router>
+    </MotionConfig>
   );
 };
 

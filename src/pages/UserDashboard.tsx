@@ -1,8 +1,8 @@
 // src/pages/UserDashboard.tsx
 import React, { useEffect, useState, useRef } from "react";
 import { X, LayoutDashboard, Printer, CircuitBoard, Calendar,
-  Settings, LogOut, Package, ChevronLeft, ChevronRight, Shield,
-  ArrowRight, Zap, Clock, CheckCircle, XCircle, AlertCircle,
+  Settings, LogOut, ChevronLeft, ChevronRight, Shield,
+  ArrowRight, Zap, Clock, CheckCircle, XCircle,
   Loader2, GraduationCap, Cpu, Box, ClipboardList, UserCircle, Plus,
   Download
 } from "lucide-react";
@@ -13,7 +13,7 @@ import { checkAndCancelStaleOrders, fetchOrderApprover } from "../utils/orderUti
 import { generateReceipt } from "../utils/pdfGenerator";
 import SettingsPanel from "../components/SettingsPanel";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation, useNavigate, Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 import SlotBookingModal from "../components/SlotBookingModal";
 
@@ -23,34 +23,34 @@ type Section = "overview" | "prints" | "pcbs" | "bookings" | "indents" | "settin
 /* ── Status badge ── */
 const StatusBadge = ({ status }: { status: string }) => {
   const map: Record<string, string> = {
-    pending:   "bg-amber-100 text-amber-700",
-    pending_payment: "bg-orange-100 text-orange-700",
-    printing:  "bg-blue-100 text-blue-700",
-    queued:    "bg-slate-100 text-slate-600",
-    completed: "bg-green-100 text-green-700",
-    Paid:      "bg-emerald-100 text-emerald-700",
-    rejected:  "bg-red-100 text-red-700",
-    approved:  "bg-green-100 text-green-700",
-    active:    "bg-blue-100 text-blue-700",
-    cancelled: "bg-slate-200 text-slate-500",
+    pending:   "bg-amber-50 text-amber-700 ring-amber-600/20",
+    pending_payment: "bg-amber-50 text-amber-700 ring-amber-600/20",
+    printing:  "bg-brand-50 text-brand-700 ring-brand-600/20",
+    queued:    "bg-amber-50 text-amber-700 ring-amber-600/20",
+    completed: "bg-green-50 text-green-700 ring-green-600/20",
+    Paid:      "bg-blue-50 text-blue-700 ring-blue-600/20",
+    rejected:  "bg-red-50 text-red-700 ring-red-600/20",
+    approved:  "bg-blue-50 text-blue-700 ring-blue-600/20",
+    active:    "bg-blue-50 text-blue-700 ring-blue-600/20",
+    cancelled: "bg-red-50 text-red-700 ring-red-600/20",
   };
   const icon: Record<string, React.ReactNode> = {
-    pending:   <Clock className="w-2.5 h-2.5" />,
-    pending_payment: <Clock className="w-2.5 h-2.5" />,
-    printing:  <Loader2 className="w-2.5 h-2.5 animate-spin" />,
-    completed: <CheckCircle className="w-2.5 h-2.5" />,
-    Paid:      <CheckCircle className="w-2.5 h-2.5" />,
-    rejected:  <XCircle className="w-2.5 h-2.5" />,
-    approved:  <CheckCircle className="w-2.5 h-2.5" />,
-    cancelled: <XCircle className="w-2.5 h-2.5" />,
+    pending:   <Clock className="h-3 w-3" aria-hidden="true" />,
+    pending_payment: <Clock className="h-3 w-3" aria-hidden="true" />,
+    printing:  <Loader2 className="h-3 w-3 animate-spin" aria-hidden="true" />,
+    completed: <CheckCircle className="h-3 w-3" aria-hidden="true" />,
+    Paid:      <CheckCircle className="h-3 w-3" aria-hidden="true" />,
+    rejected:  <XCircle className="h-3 w-3" aria-hidden="true" />,
+    approved:  <CheckCircle className="h-3 w-3" aria-hidden="true" />,
+    cancelled: <XCircle className="h-3 w-3" aria-hidden="true" />,
   };
   const labelMap: Record<string, string> = {
     pending_payment: "Waiting",
     Paid: "Paid"
   };
-  const cls = map[status] ?? "bg-gray-100 text-gray-500";
+  const cls = map[status] ?? "bg-slate-100 text-slate-700 ring-slate-600/10";
   return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold capitalize ${cls}`}>
+    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ring-1 ring-inset ${cls}`}>
       {icon[status]} {labelMap[status] || status}
     </span>
   );
@@ -64,12 +64,12 @@ const Carousel: React.FC<{ title: string; icon: React.ReactNode; children: React
   if (children.length === 0) return null;
   return (
     <div className="mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-slate-800 flex items-center gap-2 text-sm">{icon}{title}</h3>
-        <div className="flex items-center gap-2">
-          {onMore && <button onClick={onMore} className="text-xs text-brand-600 font-bold flex items-center gap-1 hover:underline">View all <ArrowRight className="w-3 h-3" /></button>}
-          <button onClick={() => scroll(-1)} className="p-1 rounded-full hover:bg-slate-100"><ChevronLeft className="w-4 h-4 text-slate-400" /></button>
-          <button onClick={() => scroll(1)} className="p-1 rounded-full hover:bg-slate-100"><ChevronRight className="w-4 h-4 text-slate-400" /></button>
+      <div className="mb-4 flex items-center justify-between gap-2">
+        <h3 className="flex items-center gap-2 font-display text-lg font-semibold text-slate-900">{icon}{title}</h3>
+        <div className="flex items-center gap-1">
+          {onMore && <button onClick={onMore} className="mr-2 inline-flex items-center gap-1 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700 hover:underline underline-offset-4">View all <ArrowRight className="h-4 w-4" aria-hidden="true" /></button>}
+          <button onClick={() => scroll(-1)} aria-label="Scroll left" className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"><ChevronLeft className="h-4 w-4" aria-hidden="true" /></button>
+          <button onClick={() => scroll(1)} aria-label="Scroll right" className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"><ChevronRight className="h-4 w-4" aria-hidden="true" /></button>
         </div>
       </div>
       <div ref={ref} className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide snap-x">
@@ -81,43 +81,41 @@ const Carousel: React.FC<{ title: string; icon: React.ReactNode; children: React
 
 /* ── Order card (carousel item) ── */
 const OrderCard = ({ item, type }: { item: any; type: string }) => (
-  <div className="snap-start shrink-0 w-64 bg-white rounded-2xl border border-slate-100 shadow-sm p-4 hover:shadow-md transition-shadow">
-    <div className="flex items-start justify-between mb-3">
-      <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${
-        type === "print" ? "bg-brand-50" : type === "pcb" ? "bg-blue-50" : "bg-purple-50"
+  <div className="snap-start shrink-0 w-64 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md">
+    <div className="mb-3 flex items-start justify-between">
+      <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+        type === "print" ? "bg-brand-50" : type === "pcb" ? "bg-blue-50" : "bg-slate-100"
       }`}>
-        {type === "print" ? <Printer className="w-4 h-4 text-brand-600" /> :
-         type === "pcb"   ? <CircuitBoard className="w-4 h-4 text-blue-600" /> :
-                            <Calendar className="w-4 h-4 text-purple-600" />}
+        {type === "print" ? <Printer className="h-5 w-5 text-brand-600" aria-hidden="true" /> :
+         type === "pcb"   ? <CircuitBoard className="h-5 w-5 text-blue-600" aria-hidden="true" /> :
+                            <Calendar className="h-5 w-5 text-slate-600" aria-hidden="true" />}
       </div>
       <StatusBadge status={item.status || "pending"} />
     </div>
-    <p className="font-bold text-slate-800 text-sm truncate mb-1">
+    <p className="mb-1 truncate text-sm font-semibold text-slate-900">
       {item.file_name || item.fileName || item.title || `#${item.id?.slice(0,6) ?? "Order"}`}
     </p>
-    <p className="text-xs text-slate-400">
+    <p className="text-xs text-slate-500">
       {item.created_at || item.submitDate
         ? new Date(item.created_at || item.submitDate).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
         : "—"}
     </p>
     {item.cost && (
-      <p className="text-xs font-bold text-brand-600 mt-2">₹{item.cost}</p>
+      <p className="mt-2 text-sm font-semibold text-brand-600">₹{item.cost}</p>
     )}
   </div>
 );
 
 /* ── Quick action card ── */
 const QuickAction = ({ icon, label, desc, color, onClick }: any) => (
-  <motion.button
-    whileHover={{ y: -3, scale: 1.02 }}
-    whileTap={{ scale: 0.97 }}
+  <button
     onClick={onClick}
-    className={`flex flex-col items-start p-5 rounded-2xl border ${color} text-left transition-all hover:shadow-md`}
+    className={`flex flex-col items-start rounded-xl border p-5 text-left shadow-sm transition-shadow hover:shadow-md hover:border-slate-300 ${color}`}
   >
-    <div className="mb-3">{icon}</div>
-    <p className="font-bold text-sm">{label}</p>
-    <p className="text-xs opacity-70 mt-0.5">{desc}</p>
-  </motion.button>
+    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50" aria-hidden="true">{icon}</div>
+    <p className="text-sm font-semibold">{label}</p>
+    <p className="mt-0.5 text-sm text-slate-500">{desc}</p>
+  </button>
 );
 
 /* ═══════════════ MAIN COMPONENT ═══════════════ */
@@ -187,56 +185,43 @@ export const UserDashboard: React.FC<Props> = ({ user }) => {
   const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
-      {/* ── Mobile Top Header ── */}
-      <header className="md:hidden sticky top-0 bg-white/80 backdrop-blur-xl border-b border-slate-100 z-50 px-6 py-4 flex items-center justify-center">
-        <Link to="/">
-          <img src="/img/logo_orange_new.png" alt="REVA IDEA Lab" className="h-10 w-auto object-contain" />
-        </Link>
-      </header>
-
+    <div className="flex min-h-screen flex-col bg-slate-50 pt-16 md:flex-row">
       {/* ── Sidebar ── */}
       <aside className="hidden md:flex w-64 shrink-0">
-        <div className="sticky top-0 h-screen bg-white border-r border-slate-100 flex flex-col px-4 pt-6 pb-6 shadow-[10px_0_30px_rgba(0,0,0,0.02)]">
+        <div className="sticky top-16 flex h-[calc(100vh-4rem)] w-full flex-col border-r border-slate-200 bg-white px-4 py-6">
 
-          {/* Logo */}
           <div className="px-2 mb-6">
-            <Link to="/">
-              <img src="/img/logo_orange_new.png" alt="REVA IDEA Lab" className="h-9 w-auto object-contain hover:opacity-80 transition-opacity" />
-            </Link>
-          </div>
-
-          <div className="px-2 mb-8">
             <div className="flex items-center gap-3">
               <img
                 src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || "U")}&background=f97316&color=fff`}
                 alt={user?.name}
-                className="w-10 h-10 rounded-2xl object-cover ring-4 ring-slate-50"
+                className="h-10 w-10 shrink-0 rounded-full object-cover ring-1 ring-slate-200"
               />
               <div className="min-w-0">
-                <p className="text-sm font-black text-slate-900 uppercase tracking-tight truncate leading-none mb-1">{user?.name}</p>
-                <p className="text-[10px] font-bold text-brand-600 uppercase tracking-tighter truncate leading-none">{user?.degree || user?.email}</p>
+                <p className="truncate text-sm font-semibold text-slate-900">{user?.name}</p>
+                <p className="truncate text-xs text-slate-500">{user?.degree || user?.email}</p>
               </div>
             </div>
           </div>
 
-          <nav className="flex-1 space-y-0.5">
+          <nav className="flex-1 space-y-1">
             {nav.map(item => (
               <button
                 key={item.id}
                 onClick={() => {
                   setActive(item.id as Section);
                 }}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                aria-current={active === item.id ? "page" : undefined}
+                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                   active === item.id
-                    ? "bg-brand-50 text-brand-700 font-bold"
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
+                    ? "bg-brand-50 text-brand-700"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
-                <span className={active === item.id ? "text-brand-600" : "text-slate-400"}>{item.icon}</span>
+                <span className={active === item.id ? "text-brand-600" : "text-slate-400"} aria-hidden="true">{item.icon}</span>
                 <span className="flex-1 text-left">{item.label}</span>
                 {(item as any).badge > 0 && (
-                  <span className="bg-brand-100 text-brand-700 text-[10px] font-black rounded-full px-1.5 py-0.5 min-w-[18px] text-center">
+                  <span className="min-w-[1.25rem] rounded-full bg-brand-100 px-1.5 py-0.5 text-center text-xs font-medium text-brand-700">
                     {(item as any).badge}
                   </span>
                 )}
@@ -245,40 +230,38 @@ export const UserDashboard: React.FC<Props> = ({ user }) => {
           </nav>
 
           {/* Logout */}
-          <div className="pt-6 border-t border-slate-50 mt-auto">
+          <div className="mt-auto border-t border-slate-200 pt-4">
             <button
               onClick={() => { authService.logout(); navigate("/"); }}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] text-red-400 hover:bg-red-50 hover:text-red-600 transition-all"
+              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-700"
             >
-              <LogOut className="w-4 h-4" /> Sign Out
+              <LogOut className="h-4 w-4" aria-hidden="true" /> Sign Out
             </button>
           </div>
         </div>
       </aside>
 
       {/* ── Main ── */}
-      <main className="flex-1 min-w-0 pt-6 pb-24 md:pb-12 overflow-x-hidden">
+      <main className="flex-1 min-w-0 pt-8 pb-24 md:pb-12 overflow-x-hidden">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={active}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.18 }}
-            className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-10"
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
           >
             {/* ──────── OVERVIEW ──────── */}
             {active === "overview" && (
               <div>
                 {/* Hero */}
-                <div className="relative bg-gradient-to-br from-slate-900 via-brand-900 to-slate-900 rounded-3xl p-8 mb-8 overflow-hidden">
-                  <div className="absolute -top-12 -right-12 w-48 h-48 bg-brand-500/20 rounded-full blur-3xl pointer-events-none" />
-                  <div className="absolute -bottom-8 -left-8 w-36 h-36 bg-orange-500/15 rounded-full blur-3xl pointer-events-none" />
-                  <p className="text-brand-300 text-sm font-semibold mb-1">{greeting} 👋</p>
-                  <h1 className="text-white text-3xl font-bold mb-2">{firstName}</h1>
+                <div className="mb-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                  <p className="text-sm font-semibold text-brand-600">{greeting} 👋</p>
+                  <h1 className="mt-1 font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">{firstName}</h1>
                   {user?.program && (
-                    <p className="text-white/50 text-sm flex items-center gap-1.5">
-                      <GraduationCap className="w-3.5 h-3.5" /> {user.degree} · {user.program}
+                    <p className="mt-2 flex items-center gap-1.5 text-sm text-slate-500">
+                      <GraduationCap className="h-4 w-4" aria-hidden="true" /> {user.degree} · {user.program}
                     </p>
                   )}
                   {/* Active Order Status Carousel */}
@@ -305,81 +288,76 @@ export const UserDashboard: React.FC<Props> = ({ user }) => {
                     if (activeOrders.length === 0) return (
                       <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3">
                         {[
-                          { label: "3D Print", count: prints.length, action: () => navigate("/3d-print"), icon: <Printer className="w-5 h-5" /> },
-                          { label: "PCB Order", count: pcbs.length, action: () => navigate("/pcb-order"), icon: <CircuitBoard className="w-5 h-5" /> },
-                          { label: "Book Slot", count: slots.length, action: () => setIsBookingModalOpen(true), icon: <Calendar className="w-5 h-5" /> },
+                          { label: "3D Print", count: prints.length, action: () => navigate("/3d-print"), icon: <Printer className="h-5 w-5" /> },
+                          { label: "PCB Order", count: pcbs.length, action: () => navigate("/pcb-order"), icon: <CircuitBoard className="h-5 w-5" /> },
+                          { label: "Book Slot", count: slots.length, action: () => setIsBookingModalOpen(true), icon: <Calendar className="h-5 w-5" /> },
                         ].map(s => (
-                          <motion.button
+                          <button
                             key={s.label}
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
                             onClick={s.action}
-                            className="bg-white/10 border border-white/10 backdrop-blur-sm rounded-2xl p-4 text-left hover:bg-white/15 transition-all"
+                            className="rounded-xl border border-slate-200 bg-white p-5 text-left transition-colors hover:border-slate-300 hover:bg-slate-50"
                           >
-                            <div className="text-white/40 mb-2">{s.icon}</div>
-                            <p className="text-2xl font-black text-white">{s.count}</p>
-                            <p className="text-[9px] font-black text-white/40 uppercase tracking-widest mt-1">{s.label}</p>
-                          </motion.button>
+                            <div className="mb-2 text-brand-500" aria-hidden="true">{s.icon}</div>
+                            <p className="font-display text-2xl sm:text-3xl font-semibold text-slate-900">{s.count}</p>
+                            <p className="mt-1 text-sm text-slate-500">{s.label}</p>
+                          </button>
                         ))}
                       </div>
                     );
 
                     return (
                       <div className="mt-6">
-                        <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-3">Active Orders</p>
+                        <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Active Orders</p>
                         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x">
                           {activeOrders.map((order, idx) => {
                             const stage = stageConfig[order.status] || stageConfig.pending;
                             const isPrint = order._type === 'print';
-                            const gradientClass = isPrint
-                              ? "from-orange-500/20 via-orange-600/10 to-transparent border-orange-500/20"
-                              : "from-emerald-500/20 via-emerald-600/10 to-transparent border-emerald-500/20";
-                            const accentColor = isPrint ? "text-orange-400" : "text-emerald-400";
-                            const barColor = isPrint ? "bg-orange-400" : "bg-emerald-400";
-                            const dotColor = isPrint ? "bg-orange-500" : "bg-emerald-500";
+                            const accentColor = isPrint ? "text-brand-600" : "text-blue-600";
+                            const barColor = isPrint ? "bg-brand-500" : "bg-blue-500";
+                            const dotColor = isPrint ? "bg-brand-500" : "bg-blue-500";
 
                             return (
                               <motion.div
                                 key={order.id}
-                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                transition={{ delay: idx * 0.08, type: "spring", stiffness: 200, damping: 20 }}
-                                className={`snap-start shrink-0 w-56 bg-gradient-to-br ${gradientClass} backdrop-blur-md rounded-2xl p-4 border cursor-pointer hover:scale-[1.02] transition-transform`}
+                                initial={{ opacity: 0, y: 12 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, ease: "easeOut", delay: Math.min(idx * 0.05, 0.3) }}
+                                className="snap-start shrink-0 w-56 cursor-pointer rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
                                 onClick={() => {
                                   if (isPrint) { setSelectedPrintOrder(order); setShowPrintDetail(true); }
                                   else setActive("pcbs");
                                 }}
                               >
                                 {/* Card Header */}
-                                <div className="flex items-center justify-between mb-3">
-                                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${isPrint ? 'bg-orange-500/20' : 'bg-emerald-500/20'}`}>
-                                    {isPrint ? <Printer className={`w-4 h-4 ${accentColor}`} /> : <CircuitBoard className={`w-4 h-4 ${accentColor}`} />}
+                                <div className="mb-3 flex items-center justify-between">
+                                  <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${isPrint ? 'bg-brand-50' : 'bg-blue-50'}`}>
+                                    {isPrint ? <Printer className={`h-4 w-4 ${accentColor}`} aria-hidden="true" /> : <CircuitBoard className={`h-4 w-4 ${accentColor}`} aria-hidden="true" />}
                                   </div>
                                   <div className="flex items-center gap-1.5">
-                                    <span className={`w-1.5 h-1.5 rounded-full ${dotColor} ${order.status === 'printing' || order.status === 'processing' ? 'animate-pulse' : ''}`} />
-                                    <span className="text-[9px] font-bold text-white/50 uppercase">{order.status === 'pending_payment' ? 'Waiting' : order.status}</span>
+                                    <span className={`h-1.5 w-1.5 rounded-full ${dotColor}`} aria-hidden="true" />
+                                    <span className="text-xs font-medium capitalize text-slate-500">{order.status === 'pending_payment' ? 'Waiting' : order.status}</span>
                                   </div>
                                 </div>
 
                                 {/* File Name */}
-                                <p className="text-sm font-bold text-white truncate mb-1">{order.file_name || order.fileName || `#${order.id?.slice(0,6)}`}</p>
+                                <p className="mb-1 truncate text-sm font-semibold text-slate-900">{order.file_name || order.fileName || `#${order.id?.slice(0,6)}`}</p>
 
                                 {/* Stage Message */}
-                                <p className="text-[11px] text-white/50 leading-tight mb-3 line-clamp-2">{stage.message}</p>
+                                <p className="mb-3 line-clamp-2 text-xs leading-tight text-slate-600">{stage.message}</p>
 
                                 {/* Progress Bar */}
-                                <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden">
+                                <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
                                   <motion.div
                                     initial={{ width: 0 }}
                                     animate={{ width: `${stage.progress}%` }}
-                                    transition={{ duration: 1, delay: idx * 0.1, ease: "easeOut" }}
+                                    transition={{ duration: 0.6, delay: Math.min(idx * 0.05, 0.3), ease: "easeOut" }}
                                     className={`h-full ${barColor} rounded-full`}
                                   />
                                 </div>
 
                                 {/* Cost */}
                                 {order.cost && (
-                                  <p className={`text-xs font-bold ${accentColor} mt-2`}>INR {order.cost}</p>
+                                  <p className={`mt-2 text-xs font-semibold ${accentColor}`}>INR {order.cost}</p>
                                 )}
                               </motion.div>
                             );
@@ -387,14 +365,14 @@ export const UserDashboard: React.FC<Props> = ({ user }) => {
 
                           {/* Add New Card */}
                           <motion.button
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: activeOrders.length * 0.08 }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.4, delay: Math.min(activeOrders.length * 0.05, 0.3) }}
                             onClick={() => navigate("/3d-print")}
-                            className="snap-start shrink-0 w-56 bg-white/5 border border-dashed border-white/15 rounded-2xl p-4 flex flex-col items-center justify-center text-white/30 hover:bg-white/10 hover:text-white/50 transition-all"
+                            className="snap-start shrink-0 w-56 flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white p-4 text-slate-500 transition-colors hover:border-brand-500 hover:bg-brand-50/50 hover:text-brand-600"
                           >
-                            <Plus className="w-6 h-6 mb-2" />
-                            <span className="text-[10px] font-bold uppercase tracking-wider">New Order</span>
+                            <Plus className="mb-2 h-6 w-6" aria-hidden="true" />
+                            <span className="text-xs font-semibold uppercase tracking-wider">New Order</span>
                           </motion.button>
                         </div>
                       </div>
@@ -403,39 +381,41 @@ export const UserDashboard: React.FC<Props> = ({ user }) => {
                 </div>
 
                 {/* Quick Actions */}
-                <h2 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Services</h2>
+                <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-slate-500">Services</h2>
                 <div className={`grid grid-cols-2 ${isGuest ? 'md:grid-cols-3' : 'md:grid-cols-4'} gap-4 mb-12`}>
-                  <QuickAction icon={<Printer className="w-6 h-6 text-brand-600" />} label="3D Print" desc="PLA, ABS, PETG" color="border-slate-100 bg-white text-slate-900" onClick={() => navigate("/3d-print")} />
-                  <QuickAction icon={<CircuitBoard className="w-6 h-6 text-blue-600" />} label="PCB Fab" desc="Rapid prototype" color="border-slate-100 bg-white text-slate-900" onClick={() => navigate("/pcb-order")} />
-                  <QuickAction icon={<Calendar className="w-6 h-6 text-purple-600" />} label="Slot" desc="Lab reservation" color="border-slate-100 bg-white text-slate-900" onClick={() => setIsBookingModalOpen(true)} />
-                  {!isGuest && <QuickAction icon={<Zap className="w-6 h-6 text-orange-600" />} label="Borrow" desc="Get components" color="border-slate-100 bg-white text-slate-900" onClick={() => navigate("/components")} />}
+                  <QuickAction icon={<Printer className="h-5 w-5 text-brand-600" />} label="3D Print" desc="PLA, ABS, PETG" color="border-slate-200 bg-white text-slate-900" onClick={() => navigate("/3d-print")} />
+                  <QuickAction icon={<CircuitBoard className="h-5 w-5 text-brand-600" />} label="PCB Fab" desc="Rapid prototype" color="border-slate-200 bg-white text-slate-900" onClick={() => navigate("/pcb-order")} />
+                  <QuickAction icon={<Calendar className="h-5 w-5 text-brand-600" />} label="Slot" desc="Lab reservation" color="border-slate-200 bg-white text-slate-900" onClick={() => setIsBookingModalOpen(true)} />
+                  {!isGuest && <QuickAction icon={<Zap className="h-5 w-5 text-brand-600" />} label="Borrow" desc="Get components" color="border-slate-200 bg-white text-slate-900" onClick={() => navigate("/components")} />}
                 </div>
 
                 {/* Carousels */}
                 {prints.length > 0 && (
-                  <Carousel title="3D Print Orders" icon={<Printer className="w-4 h-4 text-brand-600" />} onMore={() => setActive("prints")}>
+                  <Carousel title="3D Print Orders" icon={<Printer className="h-5 w-5 text-brand-500" aria-hidden="true" />} onMore={() => setActive("prints")}>
                     {prints.slice(0, 6).map(p => <OrderCard key={p.id} item={p} type="print" />)}
                   </Carousel>
                 )}
                 {pcbs.length > 0 && (
-                  <Carousel title="PCB Orders" icon={<CircuitBoard className="w-4 h-4 text-blue-600" />} onMore={() => setActive("pcbs")}>
+                  <Carousel title="PCB Orders" icon={<CircuitBoard className="h-5 w-5 text-blue-600" aria-hidden="true" />} onMore={() => setActive("pcbs")}>
                     {pcbs.slice(0, 6).map(p => <OrderCard key={p.id} item={p} type="pcb" />)}
                   </Carousel>
                 )}
                 {slots.length > 0 && (
-                  <Carousel title="Slot Bookings" icon={<Calendar className="w-4 h-4 text-purple-600" />} onMore={() => setActive("bookings")}>
+                  <Carousel title="Slot Bookings" icon={<Calendar className="h-5 w-5 text-slate-500" aria-hidden="true" />} onMore={() => setActive("bookings")}>
                     {slots.slice(0, 6).map(s => <OrderCard key={s.id} item={s} type="slot" />)}
                   </Carousel>
                 )}
 
                 {prints.length === 0 && pcbs.length === 0 && slots.length === 0 && (
-                  <div className="bg-white rounded-3xl border border-dashed border-slate-200 p-16 text-center">
-                    <Cpu className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                    <p className="font-bold text-slate-400">No activity yet</p>
-                    <p className="text-sm text-slate-300 mt-1">Start with a 3D print or PCB order</p>
+                  <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                      <Cpu className="h-6 w-6" aria-hidden="true" />
+                    </div>
+                    <p className="text-base font-semibold text-slate-900">No activity yet</p>
+                    <p className="mt-1 max-w-sm text-sm text-slate-500">Start with a 3D print or PCB order</p>
                     <button
                       onClick={() => navigate("/3d-print")}
-                      className="mt-6 px-6 py-2.5 bg-brand-600 text-white rounded-xl font-bold text-sm hover:bg-brand-700 transition"
+                      className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Start Printing →
                     </button>
@@ -447,10 +427,10 @@ export const UserDashboard: React.FC<Props> = ({ user }) => {
             {/* ──────── ORDERS LIST ──────── */}
             {["prints", "pcbs", "bookings", "indents"].includes(active) && (
               <div className="pb-10">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <p className="text-[10px] font-black text-brand-600 uppercase tracking-widest mb-1">Activity Tracking</p>
-                    <h1 className="text-4xl font-light text-slate-900 tracking-tighter">
+                    <p className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-brand-600">Activity Tracking</p>
+                    <h1 className="mt-2 font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
                       {active === "prints" ? "3D Print Orders" : active === "pcbs" ? "PCB Orders" : active === "bookings" ? "Slot Bookings" : "Component Indents"}
                     </h1>
                   </div>
@@ -461,9 +441,9 @@ export const UserDashboard: React.FC<Props> = ({ user }) => {
                       else if (active === "bookings") setIsBookingModalOpen(true);
                       else if (active === "indents") navigate("/components");
                     }}
-                    className="flex items-center gap-2 px-5 py-3 bg-slate-900 text-white hover:bg-brand-600 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg active:scale-95"
+                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="h-4 w-4" aria-hidden="true" />
                     New {active === "prints" ? "Print" : active === "pcbs" ? "PCB Order" : active === "bookings" ? "Booking" : "Indent"}
                   </button>
                 </div>
@@ -471,37 +451,37 @@ export const UserDashboard: React.FC<Props> = ({ user }) => {
                 {(() => {
                   const items = active === "prints" ? prints : active === "pcbs" ? pcbs : active === "bookings" ? slots : indents;
                   if ((items as any[]).length === 0) return (
-                    <div className="bg-white border border-dashed border-slate-200 rounded-[2.5rem] p-20 text-center">
-                      <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                        {active === "prints" ? <Printer className="w-8 h-8 text-slate-200" /> : <Box className="w-8 h-8 text-slate-200" />}
+                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+                      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+                        {active === "prints" ? <Printer className="h-6 w-6" aria-hidden="true" /> : <Box className="h-6 w-6" aria-hidden="true" />}
                       </div>
-                      <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Nothing found here yet</p>
+                      <p className="text-base font-semibold text-slate-900">Nothing found here yet</p>
                     </div>
                   );
                   return (
                     <div className="grid grid-cols-1 gap-3">
                       {(items as any[]).map(item => (
-                        <div key={item.id} className="group bg-white rounded-3xl border border-slate-100/60 p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center hover:shadow-xl hover:shadow-slate-200/40 hover:border-brand-100 transition-all cursor-default">
-                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center group-hover:bg-brand-50 transition-colors">
-                              {active === "prints" ? <Printer className="w-6 h-6 text-slate-300 group-hover:text-brand-600" /> : <Box className="w-6 h-6 text-slate-300 group-hover:text-brand-600" />}
+                        <div key={item.id} className="group flex flex-col items-start justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md hover:border-slate-300 sm:flex-row sm:items-center">
+                          <div className="flex min-w-0 max-w-full items-center gap-4">
+                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 transition-colors group-hover:bg-brand-50 group-hover:text-brand-600">
+                              {active === "prints" ? <Printer className="h-5 w-5" aria-hidden="true" /> : <Box className="h-5 w-5" aria-hidden="true" />}
                             </div>
-                            <div>
-                              <p className="font-bold text-slate-900 tracking-tight">{item.file_name || item.fileName || item.title || item.projectTitle || `Order #${item.id?.slice(0,6)}`}</p>
-                              <div className="flex items-center gap-2 mt-0.5">
-                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                            <div className="min-w-0">
+                              <p className="truncate font-semibold text-slate-900">{item.file_name || item.fileName || item.title || item.projectTitle || `Order #${item.id?.slice(0,6)}`}</p>
+                              <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                                <p className="text-xs text-slate-500">
                                   {item.created_at || item.submitDate || item.requestDate
                                     ? new Date(item.created_at || item.submitDate || item.requestDate).toLocaleDateString("en-IN", { dateStyle: "medium" })
                                     : ""}
                                 </p>
-                                {item.cost && <span className="w-1 h-1 bg-slate-200 rounded-full" />}
-                                {item.cost && <p className="text-[10px] font-black text-brand-600 uppercase tracking-tighter">₹{item.cost}</p>}
-                                {item.material && <span className="w-1 h-1 bg-slate-200 rounded-full" />}
-                                {item.material && <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{item.material}</p>}
+                                {item.cost && <span className="h-1 w-1 rounded-full bg-slate-300" aria-hidden="true" />}
+                                {item.cost && <p className="text-xs font-semibold text-brand-600">₹{item.cost}</p>}
+                                {item.material && <span className="h-1 w-1 rounded-full bg-slate-300" aria-hidden="true" />}
+                                {item.material && <p className="text-xs text-slate-500">{item.material}</p>}
                               </div>
                             </div>
                           </div>
-                          <div className="mt-4 sm:mt-0 flex items-center gap-4 w-full sm:w-auto self-end sm:self-center">
+                          <div className="mt-4 sm:mt-0 flex items-center justify-between gap-4 w-full sm:w-auto sm:justify-end self-end sm:self-center">
                             <StatusBadge status={item.status || "pending"} />
                             <button 
                               onClick={async () => {
@@ -512,9 +492,9 @@ export const UserDashboard: React.FC<Props> = ({ user }) => {
                                   setApproverName(name);
                                 }
                               }}
-                              className={`${active === "prints" ? "flex" : "hidden sm:flex"} items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-300 hover:text-brand-600 transition-colors`}
+                              className={`${active === "prints" ? "flex" : "hidden sm:flex"} items-center gap-1 py-2 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700 hover:underline underline-offset-4`}
                             >
-                              View <ArrowRight className="w-3 h-3" />
+                              View <ArrowRight className="h-4 w-4" aria-hidden="true" />
                             </button>
                           </div>
                         </div>
@@ -528,7 +508,7 @@ export const UserDashboard: React.FC<Props> = ({ user }) => {
             {/* ──────── SETTINGS ──────── */}
             {active === "settings" && user && (
               <div>
-                <h1 className="text-2xl font-bold text-slate-900 mb-6">Account Settings</h1>
+                <h1 className="mb-6 font-display text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Account Settings</h1>
                 <SettingsPanel
                   user={user}
                   onUpdate={async data => { await authService.updateProfile({ ...user, ...data }); }}
@@ -547,82 +527,86 @@ export const UserDashboard: React.FC<Props> = ({ user }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               onClick={() => { setShowPrintDetail(false); setApproverName(null); }}
-              className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60]"
+              className="fixed inset-0 z-[60] bg-slate-900/50"
             />
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 right-0 w-full max-w-lg bg-white shadow-2xl z-[110] overflow-y-auto"
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              role="dialog"
+              aria-modal="true"
+              className="fixed inset-y-0 right-0 z-[110] w-full max-w-lg overflow-y-auto border-l border-slate-200 bg-white shadow-xl"
             >
               <div className="p-6 sm:p-8 pb-32 sm:pb-8">
-                <div className="flex justify-between items-start mb-10">
-                  <div className="w-16 h-16 bg-brand-50 rounded-[2rem] flex items-center justify-center">
-                    <Printer className="w-8 h-8 text-brand-600" />
+                <div className="mb-8 flex items-start justify-between">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
+                    <Printer className="h-6 w-6" aria-hidden="true" />
                   </div>
-                  <button 
+                  <button
                     onClick={() => { setShowPrintDetail(false); setApproverName(null); }}
-                    className="p-3 hover:bg-slate-50 rounded-2xl transition-colors"
+                    aria-label="Close"
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
                   >
-                    <X className="w-6 h-6 text-slate-400" />
+                    <X className="h-5 w-5" aria-hidden="true" />
                   </button>
                 </div>
 
-                <div className="mb-10">
-                  <p className="text-[10px] font-black text-brand-600 uppercase tracking-widest mb-2">Order Details</p>
-                  <h2 className="text-3xl font-light text-slate-900 tracking-tighter mb-4">{selectedPrintOrder.file_name}</h2>
+                <div className="mb-8">
+                  <p className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-brand-600">Order Details</p>
+                  <h2 className="mt-2 mb-4 break-words font-display text-2xl font-semibold tracking-tight text-slate-900">{selectedPrintOrder.file_name}</h2>
                   <StatusBadge status={selectedPrintOrder.status} />
                 </div>
 
                 {/* Approver & Payment Details */}
                 {(approverName || selectedPrintOrder.payment_method) && (
-                  <div className="p-6 bg-brand-50 rounded-[2rem] border border-brand-100 mb-8 space-y-4">
+                  <div className="mb-8 space-y-4 rounded-xl border border-brand-100 bg-brand-50 p-5">
                     {approverName && (
                       <div>
-                        <p className="text-[10px] font-black text-brand-600/60 uppercase tracking-widest mb-1">Confirmed By</p>
-                        <p className="font-bold text-slate-800 flex items-center gap-2">
-                          <Shield className="w-4 h-4 text-brand-600" /> IDEALab Staff: {approverName}
+                        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-brand-700">Confirmed By</p>
+                        <p className="flex items-center gap-2 font-semibold text-slate-900">
+                          <Shield className="h-4 w-4 text-brand-600" aria-hidden="true" /> IDEALab Staff: {approverName}
                         </p>
                       </div>
                     )}
                     {(selectedPrintOrder.payment_method && selectedPrintOrder.payment_method.startsWith("Online:")) && (
                       <div>
-                        <p className="text-[10px] font-black text-brand-600/60 uppercase tracking-widest mb-1">Payment ID</p>
-                        <p className="font-mono text-sm font-bold text-slate-800">{selectedPrintOrder.payment_method.replace("Online: ", "")}</p>
+                        <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-brand-700">Payment ID</p>
+                        <p className="break-all font-mono text-sm font-semibold text-slate-900">{selectedPrintOrder.payment_method.replace("Online: ", "")}</p>
                       </div>
                     )}
                   </div>
                 )}
 
                 {/* Specs Grid */}
-                <div className="grid grid-cols-2 gap-4 mb-10">
-                  <div className="p-4 bg-slate-50 rounded-3xl border border-slate-100">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Material</p>
-                    <p className="text-base font-bold text-slate-800">{selectedPrintOrder.material}</p>
+                <div className="mb-8 grid grid-cols-2 gap-4">
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="mb-1 text-xs font-medium uppercase tracking-wider text-slate-500">Material</p>
+                    <p className="text-base font-semibold text-slate-900">{selectedPrintOrder.material}</p>
                   </div>
-                  <div className="p-4 bg-slate-50 rounded-3xl border border-slate-100">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Infill</p>
-                    <p className="text-base font-bold text-slate-800">{selectedPrintOrder.infill}%</p>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="mb-1 text-xs font-medium uppercase tracking-wider text-slate-500">Infill</p>
+                    <p className="text-base font-semibold text-slate-900">{selectedPrintOrder.infill}%</p>
                   </div>
-                  <div className="p-4 bg-slate-50 rounded-3xl border border-slate-100">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Weight</p>
-                    <p className="text-base font-bold text-slate-800">{selectedPrintOrder.weight ? `${Math.round(selectedPrintOrder.weight)}g` : "—"}</p>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="mb-1 text-xs font-medium uppercase tracking-wider text-slate-500">Weight</p>
+                    <p className="text-base font-semibold text-slate-900">{selectedPrintOrder.weight ? `${Math.round(selectedPrintOrder.weight)}g` : "—"}</p>
                   </div>
-                  <div className="p-4 bg-slate-50 rounded-3xl border border-slate-100">
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Amount Paid</p>
-                    <p className="text-base font-black text-brand-600">{selectedPrintOrder.cost ? `₹${selectedPrintOrder.cost}` : "—"}</p>
+                  <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                    <p className="mb-1 text-xs font-medium uppercase tracking-wider text-slate-500">Amount Paid</p>
+                    <p className="text-base font-semibold text-brand-600">{selectedPrintOrder.cost ? `₹${selectedPrintOrder.cost}` : "—"}</p>
                   </div>
                 </div>
 
                 {/* Receipt Download Action */}
                 {selectedPrintOrder.status !== 'cancelled' && selectedPrintOrder.status !== 'pending_payment' && (
-                  <button 
+                  <button
                     onClick={() => generateReceipt({ ...selectedPrintOrder, approverName }, user)}
-                    className="w-full py-4 rounded-2xl bg-slate-900 text-white font-black text-[10px] uppercase tracking-[0.2em] flex justify-center items-center gap-3 transition-all active:scale-95 shadow-lg shadow-slate-900/10 hover:bg-slate-800"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    <Download className="w-4 h-4" /> Download Receipt
+                    <Download className="h-5 w-5" aria-hidden="true" /> Download Receipt
                   </button>
                 )}
 
