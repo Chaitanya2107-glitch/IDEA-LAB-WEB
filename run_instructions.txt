@@ -1,0 +1,4 @@
+Run the API locally with the Vercel CLI (this is how the api/ folder is meant to run):
+npm i -g vercel
+vercel dev --listen 3001
+   Leave it running and start npm run dev in a second terminal. The API functions will need your env vars, like the Supabase keys, in a .env file. You can pull them from Vercel with vercel env pull.

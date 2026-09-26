@@ -71,7 +71,7 @@ const Components: React.FC<ComponentsProps> = ({ user }) => {
          id: item.id, 
          name: item.name, 
          category: item.category, 
-         type: item.type, 
+         type: item.type === 'consumable' ? 'consumable' : 'non-consumable', 
          quantity: 1, 
          costPerUnit: item.costPerUnit 
        }]);

@@ -9,6 +9,14 @@ export default defineConfig(({ mode }) => {
       server: {
         port: 3000,
         host: '0.0.0.0',
+        // Vercel functions in api/ aren't served by Vite; forward /api to a running backend
+        // (a deployed URL, or `vercel dev` on its default port).
+        proxy: {
+          '/api': {
+            target: env.API_PROXY_TARGET || 'http://localhost:3001',
+            changeOrigin: true,
+          },
+        },
       },
       plugins: [
         react(),

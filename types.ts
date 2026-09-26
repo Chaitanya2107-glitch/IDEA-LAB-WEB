@@ -72,6 +72,9 @@ export interface Event {
   location: string;
   max_attendees: number;
   banner_image: string;
+  date: Date;
+  category: string;
+  imageUrl: string;
   created_at: string;
   updated_at: string;
 }
